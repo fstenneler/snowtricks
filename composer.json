@@ -1,5 +1,6 @@
 {
-    "name": "snowtricks",
+    "name": "fstenneler/snowtricks",
+    "description": "Website created for an Openclassrooms project",
     "type": "project",
     "license": "proprietary",
     "require": {

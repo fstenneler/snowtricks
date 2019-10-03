@@ -9,6 +9,9 @@ class TrickController extends AbstractController
 {
     public function index()
     {
+        /**
+         * @Route("/", name="home")
+         */
         return $this->render('home.html.twig', [
             'foo' => 'Hello world !'
         ]);

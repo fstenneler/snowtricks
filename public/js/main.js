@@ -333,6 +333,34 @@
 	$('.appointment_time').timepicker();
 
 
+	/* -- go top button */
+
+	// When the user scrolls down 20px from the top of the document, show the button
+	window.onscroll = function() {scrollFunction()};
+
+	function scrollFunction() {
+		if ($(document).scrollTop() >= $(".home-slider").height()) {
+			$("#go-top").show();
+		} else {
+			$("#go-top").hide();
+		}
+	}
+
+	// When the user clicks on the button, scroll to the top of the document
+	$("#go-top").click(function() {
+		$('html, body').animate( { scrollTop: 0 }, 500, "easeOutQuad" );
+	});
+
+	/* go top button -- */
+
+
+	/* -- go down button */
+
+	$(".go-down").click(function() {
+		$('html, body').animate( { scrollTop: $(".home-slider").height() }, 500, "easeOutQuad" );
+	});
+
+	/* go top down -- */
 
 
 })(jQuery);

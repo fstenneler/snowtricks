@@ -356,8 +356,17 @@
 
 	/* -- go down button */
 
-	$(".go-down").click(function() {
+	function goDown() {
 		$('html, body').animate( { scrollTop: $(".home-slider").height() }, 500, "easeOutQuad" );
+	}
+
+	$(".go-down").click(function() {
+		goDown();
+	});
+
+	$("#tricks-menu-link").click(function() {
+		goDown();
+		return false;
 	});
 
 	/* go top down -- */

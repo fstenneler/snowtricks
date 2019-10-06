@@ -1,7 +1,45 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Snowtricks</h1>
+
+    {% block header %}
+        <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+            <div class="container">
+            <a class="navbar-brand" href="index.html"><span>snow<b>TRICKS</b></span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#" id="tricks-menu-link" class="nav-link" onci>Tricks</a></li>
+                    <li class="nav-item"><a href="program.html" class="nav-link">Sign in</a></li>
+                    <li class="nav-item"><a href="coaches.html" class="nav-link">Sign up</a></li>
+                </ul>
+            </div>
+            </div>
+        </nav>
+        <!-- END nav -->
+    {% endblock %}
 
     {% block content %}{% endblock %}
+
+    {% block footer %}
+        <footer class="ftco-footer ftco-section img">
+            <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12 text-left">
+
+                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            </div>
+            </div>
+        </div>
+        </footer>
+    {% endblock %}
+    <button id="go-top" title="Go to top"></button>
+
 {% endblock %}

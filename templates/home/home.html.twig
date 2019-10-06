@@ -1,0 +1,53 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}SnowTricks - Le guide ultime des tricks du snowboard freestyle{% endblock %}
+
+{% block content %}
+
+    <section class="home-slider js-fullheight owl-carousel ftco-degree-bottom">
+      <div class="slider-item js-fullheight" style="/*background-image: url(images/hero2.jpg);*/">	  
+      	<div class="overlay"></div>
+        <div class="container-fluid">
+          <div class="row slider-text js-fullheight justify-content-center align-items-center" data-scrollax-parent="true">
+            <div class="col-sm-12 ftco-animate text-center mt-5 pt-md-5">
+              <h1 class="mb-4">snow<span>TRICKS</span></h1>
+              <h2 class="subheading">The ultimate guide to freestyle snowboard tricks</h2>
+			      </div>			
+          </div>
+        </div>
+		<div class="go-down-container">
+			<span class="oi oi-chevron-bottom go-down"></span>
+		</div>
+      </div>
+    </section> 
+
+    <section class="ftco-section bg-light">
+      <div class="container">
+        <div class="row d-flex">
+		
+		{% for i in 1..20 %}
+          <div class="col-xl-2dot4 col-lg-3 col-md-4 col-sm-6 d-flex ftco-animate">
+          	<div class="blog-entry justify-content-end">
+              <a href="blog-single.html" class="block-20" style="background-image: url('images/image_1.jpg');">
+              </a>
+              <div class="text p-4 float-right d-block">
+                <div class="trick-heading">
+					<div class="trick-title">
+						<h3 class="heading mt-2"><a href="#">Backside Misty</a></h3>
+					</div>
+					<div class="trick-links">
+						<a href="" class="oi oi-pencil"></a>
+						<a href="" class="oi oi-trash"></a>
+					</div>
+				</div>
+
+              </div>
+            </div>
+          </div>
+		{% endfor %}
+        </div>
+      </div>
+    </section>
+
+
+{% endblock %}

@@ -49,12 +49,12 @@ class Media
         return $this;
     }
 
-    public function getIsHeader(): ?bool
+    public function isHeader(): ?bool
     {
         return $this->isHeader;
     }
 
-    public function setIsHeader(bool $isHeader): self
+    public function setHeader(bool $isHeader): self
     {
         $this->isHeader = $isHeader;
 

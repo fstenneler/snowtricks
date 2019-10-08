@@ -372,5 +372,66 @@
 	/* go top down -- */
 
 
+	/* -- fix scrollTop bug from Google Chrome */
+	function getLoadMoreScrollTop()
+	{	
+		var height = 0;
+		$('section').each(function() {
+			height = height + $(this).height() + parseInt($(this).css("margin-top"));
+		});
+		return height;
+	}
+	/* fix scrollTop bug from Google Chrome -- */
+
+
+	/* -- Ajax load more */	
+
+	function loadMore(newFirstResult, maxResults, totalResults)
+	{
+		$.ajax({
+			method: "GET",
+			url: "/load-more/" + newFirstResult,
+			success: function(data){
+
+				if(data != "") {
+
+					var scrollPosition = getLoadMoreScrollTop() - $("#js-load-more").height();
+
+					$(".load-more .loader").animate({
+						opacity: 1
+					}, 200, function() {
+						
+						$("#js-tricks-list").append(data);
+						contentWayPoint();
+						$('html, body').animate({
+							scrollTop: scrollPosition
+						}, 500, "easeOutQuad", function() {
+							$(".load-more .loader").css('opacity', 0);						
+							if( (newFirstResult + maxResults) < totalResults) {
+								$("#js-load-more").data("first-result", newFirstResult);
+							} else {
+								$("#js-load-more").hide();		
+							}
+						});
+						
+					});
+
+				}
+
+			}
+		});
+	}
+
+	$("#js-load-more").click(function() {
+		loadMore(
+			($(this).data("first-result") + $(this).data("max-results")),
+			$(this).data("max-results"),
+			$(this).data("total-results")
+		);
+	});
+	
+	/* Ajax load more -- */
+
+
 })(jQuery);
 

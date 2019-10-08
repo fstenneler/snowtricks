@@ -10552,3 +10552,47 @@ textarea.form-control {
 .go-down:hover {
   color: #209CEE;
 }
+
+.load-more {
+  margin-top: 3rem;
+}
+
+.load-more .btn-load-more {
+  margin: auto;
+  color: #fff;
+  background-color: #209CEE;
+  background-image: -moz-linear-gradient(45deg, rgba(32,156,238,0), #BAD5E7);
+  background-image: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(32,156,238,0)), color-stop(100%, #BAD5E7));
+  background-image: -webkit-linear-gradient(45deg, rgba(32,156,238,0), #BAD5E7);
+  background-image: -o-linear-gradient(45deg, rgba(32,156,238,0), #BAD5E7);
+  background-image: -ms-linear-gradient(45deg, rgba(32,156,238,0), #BAD5E7);
+  background-image: linear-gradient( 45deg, rgba(32,156,238,0), #BAD5E7);
+  border: transparent;
+  font-style: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 0.8rem 5rem 0.8rem 2.5rem;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.load-more .btn-load-more:hover {
+  background-color: #0035BA;
+}
+
+.load-more .loader {
+  display: inline-block;
+  opacity: 0;
+}
+
+.load-more .txt {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/*
+  Set the color of the icon
+*/
+.load-more svg path, .load-more svg rect{
+  fill: #fff;
+}

@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Trick
 {
+
+    const NUM_ITEMS = 15;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}SnowTricks - Le guide ultime des tricks du snowboard freestyle
+{% block title %}SnowTricks - The ultimate guide to freestyle snowboard tricks
 {% endblock %}
 
 {% block content %}
@@ -27,11 +27,13 @@
         <div class="container">
             <div id="js-tricks-list" class="row d-flex">
 
-                {{ include('home/_tricks.html.twig') }}
+                {{ include('tricks/_tricks.html.twig') }}
 
             </div>
+
+            {% if trick_list.count > constant('App\\Entity\\Trick::NUM_ITEMS') %}
             <div class="row d-flex load-more">
-                <div id="js-load-more" class="btn btn-load-more" data-first-result="0" data-max-results="{{ constant('App\\Entity\\Trick::NUM_ITEMS') }}" data-total-results="{{ trick_list.count }}">
+                <div id="js-load-more" class="btn btn-load-more">
                     <div class="loader">
                         <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewbox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
                             <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
@@ -42,6 +44,8 @@
                     <div class='txt'>Load more</div>
                 </div>
             </div>
+            {% endif %}
+            <div id='js-load-parameters' data-category="0" data-first-result="0" data-max-results="{{ constant('App\\Entity\\Trick::NUM_ITEMS') }}" data-total-results="{{ trick_list.count }}" data-order-by="creationDate-DESC"></div>
         </div>
     </section>
 

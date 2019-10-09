@@ -17,66 +17,51 @@ class TrickController extends AbstractController
 
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
-            ->findLatest();
-
-        if (!$trick) {
-            throw $this->createNotFoundException(
-                'No tricks found'
-            );
-        }
+            ->findTricks();
 
         return $this->render('home/home.html.twig', [
             'trick_list' => $trick
         ]);
     }
-
+    
     /**
-     * @Route("/load-more/{firstResult}", methods={"GET"}, name="load_more")
-     */
-     public function loadMore($firstResult)
-     {
- 
-         $trick = $this->getDoctrine()
-             ->getRepository(Trick::class)
-             ->findLatest($firstResult);
- 
-         if (!$trick) {
-             throw $this->createNotFoundException(
-                 'No tricks found'
-             );
-         }
- 
-         return $this->render('home/_tricks.html.twig', [
-             'trick_list' => $trick
-         ]);
-     }
- 
-    ///**
-    // * @Route("/load-more/{tricksNumber}", methods={"GET"}, name="load_more")
-    // */
-     /*public function loadMore(SerializerInterface $serializer)
-     {
- 
-         $trick = $this->getDoctrine()
-             ->getRepository(Trick::class)
-             ->findLatest();
- 
-         if (!$trick) {
-             throw $this->createNotFoundException(
-                 'No tricks found'
-             );
-         }
+    * @Route("/tricks/{categoryId}", name="tricks", methods={"GET","HEAD"}, requirements={"categoryId" = "\d+"}, defaults={"categoryId" = 0})
+    */
+    public function tricks($categoryId)
+    {
 
-        // Serialize your object in Json
-        $jsonObject = $serializer->serialize($trick, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            },
-            'ignored_attributes' => ['description', 'category', 'creationDate', 'modificationDate', 'header']
+        $trick = $this->getDoctrine()
+            ->getRepository(Trick::class)
+            ->findTricks(['categoryId' => $categoryId]);
+
+        $category = $this->getDoctrine()
+            ->getRepository(Trick::class)
+            ->findCategories();
+
+        return $this->render('tricks/tricks.html.twig', [
+            'trick_list' => $trick,
+            'category_list' => $category
         ]);
 
-        // For instance, return a Response with encoded Json
-        return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
+    }
+ 
+    /**
+     * @Route("/load-results/{categoryId}/{firstResult}/{orderBy}", methods={"GET"}, name="load_more", requirements={"firstResult" = "\d+", "categoryId" = "\d+"})
+     */
+     public function loadResults($categoryId, $firstResult, $orderBy)
+     {
 
-     }*/
+        $trick = $this->getDoctrine()
+            ->getRepository(Trick::class)
+            ->findTricks([
+                'categoryId' => $categoryId,
+                'firstResult' => $firstResult,
+                'orderBy' => $orderBy
+            ]);
+ 
+        return $this->render('tricks/_tricks.html.twig', [
+            'trick_list' => $trick
+        ]);
+     }
+
  }

@@ -20,46 +20,66 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
-    public function findLatest($firstResult = 1, $maxResults = Trick::NUM_ITEMS)
+    /**
+     * Find tricks using given query parameters
+     *
+     * @param array $parameters
+     * @return Paginator
+     */
+    public function findTricks($parameters = [])
     {
+
+        // set default parameters
+        $request = array(
+            'categoryId' => 0,
+            'firstResult' => 1,
+            'maxResults' => Trick::NUM_ITEMS,
+            'orderBy' => 'creationDate-DESC'
+        );
+
+        // replace default parameters by query parameters
+        foreach($parameters as $key => $val) {
+            $request[$key] = $val;
+        }
+
+        // verify and format orderBy parameter
+        if(!in_array($request['orderBy'], ['creationDate-ASC', 'creationDate-DESC', 'name-ASC', 'name-DESC'])) {
+            $request['orderBy'] = 'creationDate-DESC';
+        }        
+        $request['orderByField'] = preg_replace("#-(.+)$#","",$request['orderBy']);
+        $request['orderByDirection'] = preg_replace("#^(.+)-#","",$request['orderBy']);
+
+        // do query
         $qb = $this->createQueryBuilder('t')
             ->addSelect('m')
-            ->leftJoin('t.media', 'm', 'WITH', 'm.isHeader = 1') 
-            ->orderBy('t.creationDate', 'DESC')
-            ->setFirstResult($firstResult)
-            ->setMaxResults($maxResults)
-            ;
+            ->leftJoin('t.media', 'm', 'WITH', 'm.isHeader = 1')
+            ->orderBy('t.' . $request['orderByField'], $request['orderByDirection'])
+            ->setFirstResult($request['firstResult'])
+            ->setMaxResults($request['maxResults']);
+        
+        if($request['categoryId'] > 0) {
+            $qb->andWhere('t.category = :cat')
+                ->setParameter('cat', $request['categoryId']);
+        }
 
         return new Paginator($qb);
 
     }
 
-    // /**
-    //  * @return Trick[] Returns an array of Trick objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Find all categories ordered by name
+     *
+     * @return Collection
+     */
+     public function findCategories()
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+            ->addSelect('c')
+            ->innerJoin('t.category', 'c') 
+            ->groupBy('t.category')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Trick
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

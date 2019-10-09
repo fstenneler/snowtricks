@@ -118,7 +118,7 @@ class Trick
         return $this->media;
     }
 
-    public function addMedium(Media $medium): self
+    /*public function addMedium(Media $medium): self
     {
         if (!$this->media->contains($medium)) {
             $this->media[] = $medium;
@@ -139,7 +139,7 @@ class Trick
         }
 
         return $this;
-    }
+    }*/
 
     public function getCategory(): ?Category
     {

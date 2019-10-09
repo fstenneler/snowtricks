@@ -20,6 +20,12 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
+    /**
+     * Find tricks using given query parameters
+     *
+     * @param array $parameters
+     * @return Paginator
+     */
     public function findTricks($parameters = [])
     {
 
@@ -60,7 +66,12 @@ class TrickRepository extends ServiceEntityRepository
 
     }
 
-    public function findCategories()
+    /**
+     * Find all categories ordered by name
+     *
+     * @return Collection
+     */
+     public function findCategories()
     {
         return $this->createQueryBuilder('t')
             ->addSelect('c')

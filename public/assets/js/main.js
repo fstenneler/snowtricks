@@ -379,13 +379,116 @@
 	/* fix scrollTop bug from Google Chrome -- */
 
 
+	
+
 	/* -- Ajax load results functions */	
 
-	function loadParameters(reset = false)
+	function loadResults(requestParameters, divId, reset = false)
 	{
-		var category = 0;
+
+		// load default parameters and replace by request parameters
+		if(divId == "js-tricks-list") {
+			var parameters = loadTrickParameters(reset);		
+		} else if(divId == "js-comment-list") {
+			var parameters = loadCommentParameters(reset);		
+		}
+
+		for(var key in requestParameters) {
+		  parameters[key] = requestParameters[key];
+		}		
+
+		// do ajax request
+		if(divId == "js-tricks-list") {
+			var url = "/load-results/" + parameters["category"] + "/" + parameters["newFirstResult"] + "/" + parameters["orderBy"];
+		} else if(divId == "js-comment-list") {
+			var url = "/load-comments/" + parameters["trick"] + "/" + parameters["newFirstResult"];
+		}
+
+		console.log(url);
+		$.ajax({
+			method: "GET",
+			url: url,
+			success: function(data){
+				if(data != "" && parameters["reset"] == true) {
+					replaceData(data, parameters, divId);			
+				} else if(data != "") {
+					appendData(data, parameters, divId);
+				}
+			}
+		});
+
+	}
+
+	function replaceData(data, parameters, divId)
+	{
+
+		$(".load-more-ajax").show();
+
+		// animate data replace
+		$("#" + divId).html(data);
+		contentWayPoint();
+
+		// store new order-by value
+		$("#js-load-parameters").data("order-by", parameters["orderBy"]);
+
+		// store new first result value
+		$("#js-load-parameters").data("first-result", parameters["newFirstResult"] + parameters["maxResults"]);
+
+		// hide load more button if no more results to display
+		if( $("#js-load-parameters").data("first-result") >= parameters["totalResults"]) {
+			$(".load-more-ajax").attr("style", "display: none !important;");
+		}
+
+	}
+
+	function appendData(data, parameters, divId)
+	{
+
+		// store actual scroll position
+		var scrollPosition = getLoadMoreScrollTop() - $(".load-more-ajax").height();
+
+		// animate data append
+		$(".load-more-ajax .loader").animate({
+			opacity: 1
+		}, 200, function() {
+
+			// append data with animation
+			$("#" + divId).append(data);
+			contentWayPoint();
+			
+			// store new first result value
+			$("#js-load-parameters").data("first-result", parameters["newFirstResult"] + parameters["maxResults"]); 
+
+			// hide load more button if no more results to display
+			if( $("#js-load-parameters").data("first-result") >= parameters["totalResults"]) {
+				$(".load-more-ajax").attr("style", "display: none !important;");
+			}
+
+			// animate scroll down
+			$('html, body').animate({
+				scrollTop: scrollPosition
+			}, 500, "easeOutQuad", function() {
+				// hide spinner
+				$(".load-more-ajax .loader").css('opacity', 0);	
+			});
+
+		});
+
+	}
+
+	/* Ajax load results functions -- */
+
+
+
+	/* -- Load tricks */
+
+	function loadTrickParameters(reset = false)
+	{
+		var category = "all";
 		if($("#js-load-parameters").data("category")) {
-			var category = $("#js-load-parameters").data("category");
+			if($("#js-load-parameters").data("category") != "") {
+				var category = $("#js-load-parameters").data("category");
+			}
 		}
 		var newFirstResult = 1;
 		if($("#js-load-parameters").data("first-result")) {
@@ -412,86 +515,107 @@
 			"reset" : reset
 		};
 	}
-
-	function replaceData(data, parameters)
-	{
-		$("#js-tricks-list").html(data);
-		contentWayPoint();
-		$("#js-load-parameters").data("order-by", parameters["orderBy"]);
-	}
-
-	function appendData(data, parameters)
-	{
-
-		// store actual scroll position
-		var scrollPosition = getLoadMoreScrollTop() - $("#js-load-more").height();
-
-		// animate data append
-		$(".load-more .loader").animate({
-			opacity: 1
-		}, 200, function() {					
-
-			// append data with animation
-			$("#js-tricks-list").append(data);
-			contentWayPoint();
-
-			// animate scroll down
-			$('html, body').animate({
-				scrollTop: scrollPosition
-			}, 500, "easeOutQuad", function() {
-
-				// hide spinner
-				$(".load-more .loader").css('opacity', 0);						
-
-				// hide load more button if no more results to display
-				if( (parameters["newFirstResult"] + parameters["maxResults"]) < parameters["totalResults"]) {
-					$("#js-load-parameters").data("first-result", parameters["newFirstResult"]);
-				} else {
-					$("#js-load-more").hide();		
-				}
-
-			});	
-
-		});
-
-	}
-
-	function loadResults(requestParameters)
-	{
-
-		// load default parameters and replace by request parameters
-		var parameters = loadParameters(false);		
-		for(var key in requestParameters) {
-		  parameters[key] = requestParameters[key];
-		}		
-
-		// do ajax request
-		var url = "/load-results/" + parameters["category"] + "/" + parameters["newFirstResult"] + "/" + parameters["orderBy"];
-		//console.log(url);
-		$.ajax({
-			method: "GET",
-			url: url,
-			success: function(data){
-				if(data != "" && parameters["reset"] == true) {					
-					replaceData(data, parameters);						
-				} else if(data != "") {
-					appendData(data, parameters);
-				}
-			}
-		});
-
-	}
-
-	$("#js-load-more").click(function() {
-		loadResults({ "newFirstResult" : $("#js-load-parameters").data("first-result") + $("#js-load-parameters").data("max-results") });
-	});
+	
+	$(".tricks-page .tricks-menu .select-category").change(function() {
+		document.location.href = $(this).val();
+	})
 	
 	$(".sort-tricks").change(function() {
-		loadResults({ "orderBy" : $(this).val(), "reset" : true });
+		loadResults({ "newFirstResult" : 0, "orderBy" : $(this).val() }, "js-tricks-list", true);
 	});
 
-	/* Ajax load results functions -- */
+	$("#js-load-more").click(function() {
+		loadResults({ "newFirstResult" : $("#js-load-parameters").data("first-result") }, "js-tricks-list");
+	});
 
+	/* Load tricks -- */
+
+
+	/* -- Load comments */	
+
+	function loadCommentParameters(reset = false)
+	{
+		var trick = 0;
+		if($("#js-load-parameters").data("trick")) {
+			var trick = $("#js-load-parameters").data("trick");
+		}
+		var newFirstResult = 1;
+		if($("#js-load-parameters").data("first-result")) {
+			var newFirstResult = $("#js-load-parameters").data("first-result");
+		}
+		var maxResults = 4;
+		if($("#js-load-parameters").data("max-results")) {
+			var maxResults = $("#js-load-parameters").data("max-results");
+		}
+		var totalResults = 0;
+		if($("#js-load-parameters").data("total-results")) {
+			var totalResults = $("#js-load-parameters").data("total-results");
+		}
+		var orderBy = "creationDate-ASC";
+		return {
+			"trick" : trick,
+			"newFirstResult" : newFirstResult,
+			"maxResults" : maxResults,
+			"totalResults" : totalResults,
+			"orderBy" : orderBy,
+			"reset" : reset
+		};
+	}
+
+	$("#js-load-more-comment").click(function() {
+		loadResults({ "newFirstResult" : $("#js-load-parameters").data("first-result") }, "js-comment-list");
+	});
+	
+	if(document.getElementById("js-load-more-comment")) {
+		loadResults({ "newFirstResult" : 0 }, "js-comment-list", true);
+	}
+
+	/* Load comments -- */
+
+	/* -- display medias in mobile version */
+
+	$("#js-display-media").click(function() {
+		$("#js-display-media .loader").css("opacity", 1);
+		$("#media-list").toggle("fast", function(){
+			$("#js-display-media .loader").css("opacity", 0);
+			if($("#media-list").is(":visible")) {
+				$("#js-display-media .txt").html("Hide medias");
+			} else {
+				$("#js-display-media .txt").html("See medias");
+			}
+		});
+	});
+
+	$( window ).resize(function() {
+		if($(window).width() > 576) {
+			$("#media-list").show();
+			$("#media-list").css("display", "flex");
+		} else {
+			$("#media-list").hide();
+		}
+	});
+
+	/* display medias in mobile version -- */
+
+
+	/* -- click on media thumbnail */
+
+	$("#media-list .media-container").click(function() {
+
+		var media = $(this).html();
+
+		$("#js-main-view-media .media").animate({
+			opacity: 0
+		}, 200, function() {
+			$("#js-main-view-media").html(media);
+			$("#js-main-view-media .media").animate({
+				opacity: 1
+			}, 200);
+		});
+
+	});
+
+	/* click on media thumbnail -- */
 
 })(jQuery);
 

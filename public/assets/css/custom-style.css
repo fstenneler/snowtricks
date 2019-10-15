@@ -1,0 +1,522 @@
+
+/* -- general custom */
+
+body {
+  background-color: #0A1426 !important;
+}
+
+.bg-light {
+  background-color: transparent !important;
+}
+
+.col-2dot4,
+.col-sm-2dot4,
+.col-md-2dot4,
+.col-lg-2dot4,
+.col-xl-2dot4 {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.col-2dot4 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+@media (min-width: 540px) {
+    .col-sm-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (min-width: 720px) {
+    .col-md-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (min-width: 960px) {
+    .col-lg-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (min-width: 1140px) {
+    .col-xl-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+@media (max-width: 767.98px) {
+  .blog-entry {
+      width: 100%;
+  }
+}
+
+.custom-hero {
+  position: relative;
+}
+
+.trick-heading {
+  display: flex;
+  width: 100%;
+}
+.trick-title {
+  text-align: left;
+  flex: auto;
+}
+.trick-links {
+  text-align: right;
+  flex: auto;
+  color: #b3b3b3;
+}
+.trick-links a {
+  color: #b3b3b3;
+}
+.trick-links a:hover {
+  color: #007bff;
+}
+.trick-links .oi-trash {
+  margin-left: 5px;
+}
+/* general custom -- */
+
+
+/* -- hero custom */
+
+#go-top {
+  display: none;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 99;
+  border: none;
+  outline: none;
+  height: 4.5rem;
+  width: 4.5rem;
+  line-height: 4.5rem;
+  text-align: center;
+  background-image: url(/images/icon-arrow-up.svg);
+  background-color: #000000;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 7px 16px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  text-transform: uppercase;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+@media (max-width: 1316px) {
+  #go-top {
+    right: 0.5rem;
+  }
+}
+
+#go-top:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+
+.go-down-container {
+  text-align: right;
+}
+
+.go-down {
+  display: block;
+  color: white;
+  cursor: pointer;
+  margin: -6.5rem 2rem 0 0;
+  font-size: 3.5rem;
+  -webkit-transition: color 0.3s; /* Safari prior 6.1 */
+  transition: color 0.3s;
+}
+@media (max-width: 1316px) {
+  .go-down {
+    margin: -6.5rem 0.5rem 0 0;
+  }
+}
+.go-down:hover {
+  color: #209CEE;
+}
+
+/* hero custom -- */
+
+
+/* -- trick list custom */
+
+.ftco-section {
+  padding-top: 3em;
+}
+
+.tricks-home .container {
+  background-color: white !important;
+  border-radius: 3px;
+  padding: 5em 2em 5em 2em;
+}
+
+.load-more {
+  margin-top: 3rem;
+}
+
+.load-more .btn-load-more {
+  margin: auto;
+  color: #fff;
+  background-color: #209CEE;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  padding: 0.5rem 4rem 0.5rem 1.5rem;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.load-more .btn-load-more:hover {
+  background-color: #0A1426 ;
+  color: #fff;
+}
+
+.load-more .loader {
+  display: inline-block;
+  opacity: 0;
+}
+
+.load-more .txt {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/*
+  Set the color of the icon
+*/
+.load-more svg path, .load-more svg rect{
+  fill: #fff;
+}
+
+/* trick list custom -- */
+
+
+/* -- tricks page custom */
+
+@media (max-width: 1316px) {
+  .tricks-page .ftco-section {
+    padding-top: 4.5em;
+  }
+}
+
+.tricks-page {
+  background-image: url("/images/background.jpg");
+  width: 100%;
+  background-size: cover auto;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  padding-top: 100px;
+} @media (max-width: 1316px) {
+  .tricks-page  {
+    padding-top: 0px;
+  }
+}
+
+.tricks-page .tricks-list .container {
+  border-radius: 3px;
+  padding: 0 2em 4em 2em;
+  min-height: 1000px;
+  background: white !important;
+} @media (max-width: 900px) {
+  .tricks-page .tricks-list .container {
+    border-radius: 0;
+  }
+}
+
+.tricks-page .tricks-list h1 {
+  text-transform: uppercase;
+  font-size: 3rem;
+  color: #209CEE;
+  line-height: 1.2;
+  font-weight: normal;
+  letter-spacing: 1px;
+  font-weight: 900;
+  font-style: italic;
+  margin-top: 0.8em;
+}
+
+.tricks-page .tricks-list h2 {
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  z-index: 99;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #000;
+}
+
+.tricks-page .tricks-menu-title {
+  font-size: 15px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #666666;
+  padding-bottom: 15px;
+  font-weight: 500;
+}
+
+.tricks-page .tricks-menu {
+    font-size: 15px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #666666;
+    padding-bottom: 15px;
+    font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .tricks-page .tricks-menu .text-left {
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .tricks-page .tricks-menu .text-right {
+    text-align: center !important;
+  }
+}
+
+.tricks-page .tricks-menu select {
+  margin-left: 15px;
+  border: 1px solid #666666;
+  padding: 2px;
+  border-radius: 3px;
+}
+
+.tricks-page .tricks-menu .select-category {
+  min-width: 300px;
+} @media (max-width: 900px) {
+  .tricks-page .tricks-menu .select-category {
+    min-width: auto;
+  }
+}
+
+.tricks-page .tricks-menu .sort-tricks {
+  min-width: 150px;
+} @media (max-width: 900px) {
+  .tricks-page .tricks-menu .sort-tricks {
+    min-width: auto;
+    margin-top: 1rem;
+  }
+}
+
+/* tricks page custom -- */
+
+
+/* -- single trick page custom */
+
+@media (max-width: 1316px) {
+  .single-tricks-page .ftco-section {
+    padding-top: 4.5em;
+  }
+}
+
+.single-tricks-page {
+  background-image: url("/images/background.jpg");
+  width: 100%;
+  background-size: cover auto;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  padding-top: 100px;
+} @media (max-width: 1316px) {
+  .single-tricks-page  {
+    padding-top: 0px;
+  }
+}
+
+.single-tricks-page .tricks-list .main-view {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  position: relative;
+  padding-right: 0px;
+  padding-left: 0px;
+} @media (max-width: 900px) {
+  .single-tricks-page .tricks-list .main-view {
+    border-radius: 0;
+  }
+}
+
+.single-tricks-page .tricks-list .main-view-media {
+  background: black;
+}
+
+.single-tricks-page .tricks-list .main-view-media .media {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  width: 100%;
+  height: 700px;
+  background-size: cover;
+}
+
+.single-tricks-page .tricks-list .main-view-title {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .single-tricks-page .tricks-list .main-view-title .mt-md-5, .single-tricks-page .tricks-list .main-view-title .my-md-5 {
+      margin-top: 0rem !important;
+  }
+}
+
+.single-tricks-page .tricks-list .main-view-title h1 {
+  text-transform: uppercase;
+  font-size: 3rem;
+  color: #209CEE;
+  line-height: 1.2;
+  font-weight: normal;
+  letter-spacing: 1px;
+  font-weight: 900;
+  font-style: italic;
+  text-shadow: 0 1px 5px #000;
+}
+
+.single-tricks-page .tricks-list .main-view .tools {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background-color: white;
+  padding: 0.2em 1em 0.2em 1em;
+  border-radius: 30px
+}
+
+.single-tricks-page .tricks-list .main-view .tools a {
+  color: #666666;
+  margin: 0.2em;
+  font-size: 1.2em;
+}
+
+.single-tricks-page .tricks-list .main-view .tools a:hover {
+  color: #209CEE;
+}
+
+.single-tricks-page .tricks-list .content {
+  background-color: white !important;
+  padding: 1.5em 2% 1.5em 2%;
+}
+
+#media-list .col-xl-2,
+#media-list .col-lg-3,
+#media-list .col-md-4,
+#media-list .col-sm-6 {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.single-tricks-page .tricks-list .content .media-container .media {
+  width: 100%;
+  height: 150px;
+  background-size: cover;
+  margin: 0 0 1.5em 0;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+} @media (max-width: 576px) {
+  #media-list {
+    display: none;
+    margin-top: 3em;
+  }
+  .single-tricks-page .tricks-list .content .media-container .media {
+    height: 200px;
+  }
+}
+
+.single-tricks-page .tricks-list .content .media-container .media:hover {
+  transform : scale(1.05);
+  box-shadow: 6px 6px 2px 1px rgba(0, 0, 0, .2);
+}
+
+.single-tricks-page .tricks-list .content .description {
+  padding: 1.5em 8% 1.5em 8%;
+}
+
+.single-tricks-page .tricks-list .content .display-media {
+  display: none !important;
+} @media (max-width: 576px) {
+  .single-tricks-page .tricks-list .content .display-media {
+    display: flex !important;
+    margin-top: 1em;
+  }
+}
+
+.single-tricks-page .tricks-list .content .trick-creation-info {
+  padding: 1.5em 8% 1.5em 8%;
+} @media (max-width: 991px) {
+  .single-tricks-page .tricks-list .content .trick-creation-info {
+    margin: 1em 0.2em 1em 0.2em;
+    padding: 1.5em 2% 1.5em 2%;
+  }
+}
+
+.single-tricks-page .tricks-list .content .trick-creation-info div {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #F9F9F9;
+  border-radius: 45px;
+  padding: 0.5em 1em 0.5em 1em;
+  margin: 1em 1em 1em 1em;
+  text-align: center;
+} @media (max-width: 991px) {
+  .single-tricks-page .tricks-list .content .trick-creation-info div {
+    margin: 0.5em 0.2em 0.5em 0.2em;
+  }
+}
+
+.single-tricks-page .tricks-list .content .trick-creation-info a {
+  color: #666666;
+}
+
+.single-tricks-page .tricks-list .content .trick-creation-info a:hover {
+  color: #209CEE;
+}
+
+.single-tricks-page .tricks-list .content .comments-section {
+  padding: 1em 16% 1.5em 16% !important;
+  width: 100%;
+} @media (max-width: 991px) {
+  .single-tricks-page .tricks-list .content .comments-section {
+    padding: 1em 8% 1.5em 8% !important;
+  }
+}
+
+.single-tricks-page .tricks-list .content .comments-section .leave-comment {
+  border-top: 1px solid #c0c0c0;
+  border-bottom: 1px solid #c0c0c0;
+  padding: 2em 12% 2em 12% !important;
+  margin-bottom: 3em;
+} @media (max-width: 991px) {
+  .single-tricks-page .tricks-list .content .comments-section .leave-comment {
+    padding: 1em 0 1.5em 0 !important;
+  }
+}
+
+.single-tricks-page .tricks-list .content .comments-section .comment-list {
+  padding: 0em 12% 2em 12% !important;
+} @media (max-width: 991px) {
+  .single-tricks-page .tricks-list .content .comments-section .comment-list {
+    padding: 1em 0 1.5em 0 !important;
+  }
+}
+
+.single-tricks-page .tricks-list .content .load-more-comment {
+  margin-top: 0em !important;
+  margin-bottom: 5em !important;
+}
+
+/* single trick page custom -- */

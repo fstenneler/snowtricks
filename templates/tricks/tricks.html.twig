@@ -1,32 +1,29 @@
 {% extends '/layout.html.twig' %}
 
-{% block title %}SnowTricks - Browse the list of tricks
-{% endblock %}
+{% block title %}SnowTricks - Browse the list of tricks{% endblock %}
 
 {% block content %}
     
     <div class="tricks-page">
 
-        <section class="tricks-header ftco-degree-bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12 ftco-animate text-center mt-5 pt-md-5">
-                        <h1>Tricks</h1>
+        <section class="ftco-section tricks-list">
+            <div class="container bg-light">
+                <div class="row d-flex tricks-menu-title">
+                    <div class="col ftco-animate text-center">
+                        <h1><a href="{{ path('tricks')}}">Tricks</a></h1>
                         <h2 class="subheading">Browse the list of tricks</h2>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="ftco-section tricks-list">
-            <div class="container bg-light">
                 <div class="row d-flex tricks-menu">
 
-                    <div class="col-md-8 text-left">
-                        <a href="{{ path("tricks") }}"{% if app.request.get('categoryId') == 0 %} class="selected"{% endif %}>All</a>
-                        {% for row in category_list %}
-                            <a href="{{ path('tricks') }}/{{ row.category.id }}"{% if app.request.get('categoryId') == row.category.id %} class="selected"{% endif %}>{{ row.category.name }}</a>
-                        {% endfor %}
+                    <div class="col-lg-8 text-left">
+                        Category 
+                        <select class="select-category">
+                            <option value="{{ path("tricks") }}"{% if app.request.get('categorySlug') is same as (null) %} selected{% endif %}>All</option>
+                            {% for row in category_list %}
+                                <option value="{{ path('tricks') }}/{{ row.category.slug }}"{% if app.request.get('categorySlug') is same as (row.category.slug) %} selected{% endif %}>{{ row.category.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="col text-right">
                         Sort by 
@@ -40,13 +37,11 @@
 
                 </div>
                 <div id="js-tricks-list" class="row d-flex">
-
                     {{ include('tricks/_tricks.html.twig') }}
-
                 </div>
 
                 {% if trick_list.count > constant('App\\Entity\\Trick::NUM_ITEMS') %}
-                <div class="row d-flex load-more">
+                <div class="row d-flex load-more load-more-ajax">
                     <div id="js-load-more" class="btn btn-load-more">
                         <div class="loader">
                             <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewbox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
@@ -59,7 +54,7 @@
                     </div>
                 </div>
                 {% endif %}
-                <div id='js-load-parameters' data-category="{{ app.request.get('categoryId') }}" data-first-result="0" data-max-results="{{ constant('App\\Entity\\Trick::NUM_ITEMS') }}" data-total-results="{{ trick_list.count }}" data-order-by="creationDate-DESC"></div>
+                <div id='js-load-parameters' data-category="{{ app.request.get('categorySlug') }}" data-first-result="{{ constant('App\\Entity\\Trick::NUM_ITEMS') }}" data-max-results="{{ constant('App\\Entity\\Trick::NUM_ITEMS') }}" data-total-results="{{ trick_list.count }}" data-order-by="creationDate-DESC"></div>
             </div>
         </section>
 

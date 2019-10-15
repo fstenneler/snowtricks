@@ -20,4 +20,16 @@ class CategoryTest extends TestCase
         $this->assertSame('Test Name content', $category->getName());
     }
 
+    /**
+     * Unit test for Category entity
+     *
+     * @return void
+     */
+    public function testGetSlug()
+    {
+        $category = new Category();
+        $category->setSlug('test-slug-content');
+        $this->assertSame('test-slug-content', $category->getSlug());
+    }
+
 }

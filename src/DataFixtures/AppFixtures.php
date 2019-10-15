@@ -2,9 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Category;
-use App\Entity\Trick;
+use App\Util\Slug;
 use App\Entity\Media;
+use App\Entity\Trick;
+use App\Entity\Comment;
+use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -17,12 +19,14 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 5; $i++) {
             $category = new Category();
             $category->setName('Category ' . $i);            
+            $category->setSlug(Slug::createSlug('Category '.$i));            
             $manager->persist($category);
             $this->addReference('category-' . $i, $category);
         }
 
 
         // Create 50 tricks
+        $mediaStart = 0;
         for ($iTrick = 1; $iTrick <= 50; $iTrick++) {
 
             // Trick
@@ -47,22 +51,27 @@ class AppFixtures extends Fixture
                 )
             );
             $trick->setCategory($this->getReference('category-' . rand(1,5)));
+            $trick->setSlug(Slug::createSlug('Trick '.$iTrick));
             $manager->persist($trick);
             $this->addReference('trick-' . $iTrick, $trick);
 
             //Media
 
             // Create 3 pictures on Media
+            $headerRand = rand(1,3);
             for ($i = 1; $i <= 3; $i++) {
                 $media = new Media();
-                $media->setUrl('trick_media.jpg');
+                $media->setUrl('trick_media_' . ($mediaStart + $i) . '.jpg');
                 $media->setTrick($this->getReference('trick-' . $iTrick));
-                if($i === 1) {
-                    $media->setIsHeader(true);
+                if($i === $headerRand) {
+                    $media->setHeader(true);
                 } else {
-                    $media->setIsHeader(false);
+                    $media->setHeader(false);
                 }                
                 $manager->persist($media);
+                if($mediaStart == 6) {
+                    $mediaStart = 0;
+                }
             }
 
             // Create 3 videos on Media
@@ -70,8 +79,30 @@ class AppFixtures extends Fixture
                 $media = new Media();
                 $media->setUrl('https://youtu.be/hPuVJkw1MmI');
                 $media->setTrick($this->getReference('trick-' . $iTrick));
-                $media->setIsHeader(false);
+                $media->setHeader(false);
                 $manager->persist($media);
+            }
+
+
+            //Comment
+
+            // Create 7 comments
+            for ($i = 1; $i <= 3; $i++) {
+                $comment = new Comment();
+                $comment->setMessage("Comment " . $i . " - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?");
+                $comment->setCreationDate(
+                    new \DateTime(
+                        date(
+                            'Y-m-d\TH:i:s.u', 
+                            mt_rand(
+                                mktime(0,0,0,1,1,2019),
+                                time()
+                            )
+                        )
+                    )
+                );
+                $comment->setTrick($this->getReference('trick-' . $iTrick));
+                $manager->persist($comment);
             }
 
         }

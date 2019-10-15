@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Entity\Comment;
+use App\Entity\Category;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,20 +21,31 @@ class TrickController extends AbstractController
             ->getRepository(Trick::class)
             ->findTricks();
 
-        return $this->render('home/home.html.twig', [
+        return $this->render('tricks/home.html.twig', [
             'trick_list' => $trick
         ]);
     }
     
     /**
-    * @Route("/tricks/{categoryId}", name="tricks", methods={"GET","HEAD"}, requirements={"categoryId" = "\d+"}, defaults={"categoryId" = 0})
+    * @Route("/tricks/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"})
     */
-    public function tricks($categoryId)
+    public function tricks($categorySlug)
     {
+
+        /*$categoryId = 0;
+        if($categorySlug !== null) {
+
+            $category = $this->getDoctrine()->getRepository(Category::class)->findOneBySlug($categorySlug)
+            if(!$category) {
+                throw $this->createNotFoundException('Requested category slug not found');
+            } else {
+
+            }
+        }*/
 
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
-            ->findTricks(['categoryId' => $categoryId]);
+            ->findTricks(['categorySlug' => $categorySlug]);
 
         $category = $this->getDoctrine()
             ->getRepository(Trick::class)
@@ -46,15 +59,21 @@ class TrickController extends AbstractController
     }
  
     /**
-     * @Route("/load-results/{categoryId}/{firstResult}/{orderBy}", methods={"GET"}, name="load_more", requirements={"firstResult" = "\d+", "categoryId" = "\d+"})
+     * @Route(
+     *  "/load-results/{categorySlug}/{firstResult}/{orderBy}",
+     *  name="load_more",
+     *  methods={"GET"},
+     *  requirements={"firstResult" = "\d+"},
+     *  defaults={"categorySlug" = "all", "firstResult" = 1, "orderBy" = "creationDate-DESC"}
+     * )
      */
-     public function loadResults($categoryId, $firstResult, $orderBy)
+     public function loadResults($categorySlug, $firstResult, $orderBy)
      {
 
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->findTricks([
-                'categoryId' => $categoryId,
+                'categorySlug' => $categorySlug,
                 'firstResult' => $firstResult,
                 'orderBy' => $orderBy
             ]);
@@ -63,5 +82,45 @@ class TrickController extends AbstractController
             'trick_list' => $trick
         ]);
      }
+ 
+    /**
+     * @Route(
+     *  "/load-comments/{trickId}/{firstResult}",
+     *  name="load_comments",
+     *  methods={"GET"},
+     *  requirements={"trickId" = "\d+", "firstResult" = "\d+"},
+     *  defaults={"trickId" = 0, "firstResult" = 1}
+     * )
+     */
+    public function loadComments($trickId, $firstResult)
+    {
+       $comment = $this->getDoctrine()
+           ->getRepository(Comment::class)
+           ->findComments($trickId, $firstResult);
+
+       return $this->render('tricks/_comment.html.twig', [
+           'comment_list' => $comment
+       ]);
+    }
+    
+    /**
+    * @Route("/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null})
+    */
+   public function singleTrick($trickSlug)
+   {
+
+        $trick = $this->getDoctrine()
+            ->getRepository(Trick::class)
+            ->findOneBy(['slug' => $trickSlug]);
+
+        if(!$trick) {
+            throw $this->createNotFoundException('Requested trick slug not found');
+        }
+
+        return $this->render('tricks/single.html.twig', [
+            'trick' => $trick
+        ]);
+
+   }
 
  }

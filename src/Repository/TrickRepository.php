@@ -31,8 +31,8 @@ class TrickRepository extends ServiceEntityRepository
 
         // set default parameters
         $request = array(
-            'categoryId' => 0,
-            'firstResult' => 1,
+            'categorySlug' => "all",
+            'firstResult' => 0,
             'maxResults' => Trick::NUM_ITEMS,
             'orderBy' => 'creationDate-DESC'
         );
@@ -57,9 +57,10 @@ class TrickRepository extends ServiceEntityRepository
             ->setFirstResult($request['firstResult'])
             ->setMaxResults($request['maxResults']);
         
-        if($request['categoryId'] > 0) {
-            $qb->andWhere('t.category = :cat')
-                ->setParameter('cat', $request['categoryId']);
+        if($request['categorySlug'] != "all") {
+            $qb->leftJoin('t.category', 'c')
+                ->andWhere('c.slug = :cat')
+                ->setParameter('cat', $request['categorySlug']);
         }
 
         return new Paginator($qb);

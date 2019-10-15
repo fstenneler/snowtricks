@@ -368,6 +368,15 @@
     "symfony/property-info": {
         "version": "v4.3.4"
     },
+    "symfony/requirements-checker": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "93d0ec48679f5e240d265088305c1ad775723f93"
+        }
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -516,6 +525,18 @@
     },
     "symfony/yaml": {
         "version": "v4.3.4"
+    },
+    "twig/extensions": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
+        },
+        "files": [
+            "./config/packages/twig_extensions.yaml"
+        ]
     },
     "twig/twig": {
         "version": "v2.11.3"

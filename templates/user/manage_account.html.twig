@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}SnowTricks - Sign up{% endblock %}
+
+{% block content %}
+    
+    <div class="user-page">
+
+        <section class="ftco-section">
+
+            <div class="container bg-light">
+
+                <div class="row d-flex heading">
+                    <div class="col ftco-animate text-center">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <h1><a href="{{ path('manage_account')}}">Account</a></h1>
+                        <h2 class="subheading">Manage your account</h2>
+                    {% else %}
+                        <h1><a href="{{ path('manage_account')}}">Registration</a></h1>
+                        <h2 class="subheading">Create a new account</h2>
+                    {% endif %}
+                    </div>
+                </div>
+
+                <div class="row d-flex form">
+                    <div class="col ftco-animate text-center">
+                        
+                        {{ form_start(form) }}
+
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                                
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            {{ form_row(form.userName, { 'attr': { 'placeholder': 'Choose a user name' }}) }}
+                            {{ form_row(form.email, { 'attr': { 'placeholder': 'Enter your email address' }}) }}
+                            {{ form_row(form.password, { 'attr': { 'placeholder': 'Choose a password (6 to 20 cars)' }}) }}
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <button type="submit" class="btn py-3 px-4 btn-primary">Update account</button>
+                            {% else %}
+                                <button type="submit" class="btn py-3 px-4 btn-primary">Create an account</button>
+                            {% endif %}
+                            
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+{% endblock %}

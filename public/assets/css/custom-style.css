@@ -280,13 +280,17 @@ body {
 
 @media (max-width: 900px) {
   .tricks-page .tricks-menu .text-left {
-    text-align: center !important;
+    text-align: right !important;
   }
 }
-
-@media (max-width: 900px) {
-  .tricks-page .tricks-menu .text-right {
-    text-align: center !important;
+@media (max-width: 571px) {
+  .tricks-page .tricks-menu .text-left span {
+    display: none;
+  }
+}
+@media (max-width: 571px) {
+  .tricks-page .tricks-menu .text-right span {
+    display: none;
   }
 }
 
@@ -295,21 +299,23 @@ body {
   border: 1px solid #666666;
   padding: 2px;
   border-radius: 3px;
+} @media (max-width: 571px) {
+  .tricks-page .tricks-menu select {
+    width: 100%;
+    margin-left: 0px;
+  }
 }
+
 
 .tricks-page .tricks-menu .select-category {
   min-width: 300px;
-} @media (max-width: 900px) {
-  .tricks-page .tricks-menu .select-category {
-    min-width: auto;
-  }
 }
 
 .tricks-page .tricks-menu .sort-tricks {
   min-width: 150px;
 } @media (max-width: 900px) {
   .tricks-page .tricks-menu .sort-tricks {
-    min-width: auto;
+    min-width: 300px;
     margin-top: 1rem;
   }
 }
@@ -360,6 +366,7 @@ body {
   width: 100%;
   height: 700px;
   background-size: cover;
+  background-position: center;
 }
 
 .single-tricks-page .tricks-list .main-view-title {
@@ -420,27 +427,93 @@ body {
   padding-right: 8px !important;
 }
 
-.single-tricks-page .tricks-list .content .media-container .media {
+.single-tricks-page .tricks-list .content .media-container {
   width: 100%;
   height: 150px;
-  background-size: cover;
   margin: 0 0 1.5em 0;
   cursor: pointer;
-  -webkit-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
+  position: relative;
+} @media (max-width: 576px) {
+  .single-tricks-page .tricks-list .content .media-container {
+    height: 200px;
+  }
+}
+
+.single-tricks-page .tricks-list .content .media {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
 } @media (max-width: 576px) {
   #media-list {
     display: none;
     margin-top: 3em;
   }
-  .single-tricks-page .tricks-list .content .media-container .media {
-    height: 200px;
+}
+
+/*.single-tricks-page .tricks-list .content .media-container .media:hover {
+  transform : scale(1.05);
+  box-shadow: 6px 6px 2px 1px rgba(0, 0, 0, .2);
+}*/
+
+#media-list .media-container .media-hover {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-size: 2em;
+  text-align: center !important;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  flex-wrap: wrap;
+}
+
+#media-zoom-window {
+  position: fixed;
+  z-index: 9000;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: white;
+  display: none;
+}
+
+#media-zoom-window .close-zoom {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  font-size: 2em;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#media-zoom-window .zoom-media-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+
+#media-zoom-window .zoom-media-container .image {
+  width: 90%;
+} @media (max-width: 576px) {
+  #media-zoom-window .zoom-media-container .image {
+    width: 100%;
   }
 }
 
-.single-tricks-page .tricks-list .content .media-container .media:hover {
-  transform : scale(1.05);
-  box-shadow: 6px 6px 2px 1px rgba(0, 0, 0, .2);
+#media-zoom-window .zoom-media-container .video {
+  width: 90%;
+  height: 90%;
+} @media (max-width: 576px) {
+  #media-zoom-window .zoom-media-container .video {
+    width: 100%;
+    height: 70%;
+  }
 }
 
 .single-tricks-page .tricks-list .content .description {
@@ -468,13 +541,17 @@ body {
 .single-tricks-page .tricks-list .content .trick-creation-info div {
   border: 1px solid rgba(0, 0, 0, 0.08);
   background-color: #F9F9F9;
-  border-radius: 45px;
-  padding: 0.5em 1em 0.5em 1em;
+  border-radius: 5px;
   margin: 1em 1em 1em 1em;
   text-align: center;
+  font-size: 0.9em;
 } @media (max-width: 991px) {
   .single-tricks-page .tricks-list .content .trick-creation-info div {
     margin: 0.5em 0.2em 0.5em 0.2em;
+  }
+} @media (max-width: 571px) {
+  .single-tricks-page .tricks-list .content .trick-creation-info div {
+    flex-basis: auto;
   }
 }
 
@@ -520,3 +597,111 @@ body {
 }
 
 /* single trick page custom -- */
+
+
+
+/* -- user page custom */
+
+@media (max-width: 1316px) {
+  .user-page .ftco-section {
+    padding-top: 4.5em;
+  }
+}
+
+.user-page {
+  background-image: url("/images/background.jpg");
+  width: 100%;
+  background-size: cover auto;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  padding-top: 100px;
+} @media (max-width: 1316px) {
+  .user-page  {
+    padding-top: 0px;
+  }
+}
+
+.user-page .container {
+  border-radius: 3px;
+  padding: 0 2em 2em 2em;
+  background: white !important;
+  max-width: 500px;
+} @media (max-width: 900px) {
+  .user-page .heading .container {
+    border-radius: 0;
+  }
+}
+
+.user-page .heading h1 {
+  text-transform: uppercase;
+  font-size: 3rem;
+  color: #209CEE;
+  line-height: 1.2;
+  font-weight: normal;
+  letter-spacing: 1px;
+  font-weight: 900;
+  font-style: italic;
+  margin-top: 0.8em;
+} @media (max-width: 576px) {
+  .user-page .heading h1 {
+    font-size: 2rem;
+  }
+}
+
+.user-page .heading h2 {
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  z-index: 99;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #000;
+}
+
+.user-page .form {
+  padding: 1.5em 8% 1.5em 8%;
+} @media (max-width: 576px) {
+  .user-page .form {
+    padding: 1.5em 0 1.5em 0;
+  }
+}
+
+.user-page .form input {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.user-page .form .btn-primary {
+  margin-top: 1em;
+  min-width: 150px;
+}
+
+.user-page .form .form-error-message {
+  color: #dc3545;
+}
+
+.user-page .form input::-webkit-input-placeholder { /* Edge */
+  color: #E4E3E3;
+}
+.user-page .form input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #E4E3E3;
+}
+.user-page .form input::placeholder {
+  color: #E4E3E3;
+}
+
+.user-page .account-link {
+  display: block;
+  margin-top: 0.5em;
+}
+
+.user-page .inline {
+  display: inline-block;
+}
+
+.user-page .view-account .row .text-right {
+  color: #C0C0C0;
+}
+
+/* user page custom -- */

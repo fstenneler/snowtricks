@@ -16,17 +16,17 @@
                 </div>
                 <div class="row d-flex tricks-menu">
 
-                    <div class="col-lg-8 text-left">
-                        Category 
+                    <div class="col-lg-6 text-left">
+                        <span>Category</span>
                         <select class="select-category">
                             <option value="{{ path("tricks") }}"{% if app.request.get('categorySlug') is same as (null) %} selected{% endif %}>All</option>
                             {% for row in category_list %}
-                                <option value="{{ path('tricks') }}/{{ row.category.slug }}"{% if app.request.get('categorySlug') is same as (row.category.slug) %} selected{% endif %}>{{ row.category.name }}</option>
+                                <option value="{{ path('tricks', {categorySlug: row.category.slug}) }}"{% if app.request.get('categorySlug') is same as (row.category.slug) %} selected{% endif %}>{{ row.category.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col text-right">
-                        Sort by 
+                    <div class="col-lg-6 text-right">
+                        <span>Sort by</span>
                         <select class="sort-tricks">
                             <option value="creationDate-DESC">Date +</option>
                             <option value="creationDate-ASC">Date -</option>

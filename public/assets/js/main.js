@@ -598,24 +598,40 @@
 	/* display medias in mobile version -- */
 
 
-	/* -- click on media thumbnail */
+	/* -- media thumbnail control */
+
+	$("#media-list .media-container").mouseenter(function() {
+		$(this).children(".media-hover")
+			.css("display", "flex")
+			.hide()
+			.fadeIn("fast");
+	});
+	
+	$("#media-list .media-container").mouseleave(function() {
+		$(this).children(".media-hover").fadeOut("fast");
+	});
 
 	$("#media-list .media-container").click(function() {
+		if($(this).children(".media").data("type") == "image") {
+			var mediaHtml = "<img class='image' src='" + $(this).children(".media").data("media") + "' alt='' />";
+		} else {
+			var mediaHtml = $(this).html();
+		}
+		$("body").prepend("<div id='media-zoom-window'><div class='close-zoom'>X</div><div class='zoom-media-container'>" + mediaHtml + "</div></div>");
 
-		var media = $(this).html();
-
-		$("#js-main-view-media .media").animate({
-			opacity: 0
-		}, 200, function() {
-			$("#js-main-view-media").html(media);
-			$("#js-main-view-media .media").animate({
-				opacity: 1
-			}, 200);
+		if($(this).children(".media").data("type") != "image") {
+			$("#media-zoom-window .media-hover").remove();
+			$("#media-zoom-window .media").attr("class", "video");
+		}
+		$("#media-zoom-window").fadeIn("fast");
+		$("#media-zoom-window .close-zoom").click(function() {
+			$("#media-zoom-window").fadeOut("fast");
+			$("#media-zoom-window").remove();
 		});
 
 	});
 
-	/* click on media thumbnail -- */
+	/* media thumbnail control -- */
 
 })(jQuery);
 

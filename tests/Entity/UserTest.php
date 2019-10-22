@@ -12,13 +12,25 @@ class UserTest extends TestCase
      *
      * @return void
      */
+    public function testGetUserName()
+    {
+        $user = new User();
+        $user->setUserName('JohnDoe824');
+        $this->assertSame('JohnDoe824', $user->getUserName());
+    }
+
+    /**
+     * Unit test for User entity
+     *
+     * @return void
+     */
     public function testGetEmail()
     {
         $user = new User();
-        $user->setEmail('user@domain.ext');
-        $this->assertSame('user@domain.ext', $user->getEmail());
+        $user->setEmail('john.doe824@orlinstreet.rocks');
+        $this->assertSame('john.doe824@orlinstreet.rocks', $user->getEmail());
     }
-
+    
     /**
      * Unit test for User entity
      *
@@ -43,5 +55,16 @@ class UserTest extends TestCase
         $this->assertSame('azerty', $user->getPassword());
     }
 
+    /**
+     * Unit test for User entity
+     *
+     * @return void
+     */
+    public function testGetResetToken()
+    {
+        $user = new User();
+        $user->setResetToken('resettokentestvalue');
+        $this->assertSame('resettokentestvalue', $user->getResetToken());
+    }
 
 }

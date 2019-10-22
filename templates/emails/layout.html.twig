@@ -1,0 +1,18 @@
+{% extends '/emails/base.html.twig' %}
+
+{% block body %}
+
+    <header>
+        <h1>SnowTricks</h1>
+        <h2>The ultimate guide to freestyle snowboard tricks</h2>
+    </header>
+
+    <section class="content">
+        {% block content %}{% endblock %}
+    </section>
+
+    <footer>
+        &copy {{ "now"|date("Y") }} SnowTricks
+    </footer>
+
+{% endblock %}

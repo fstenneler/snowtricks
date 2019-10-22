@@ -41,8 +41,15 @@
                 </div>
                 <div class="row" id="media-list">
                   {% for media in trick.media %}
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 media-container">
-                      {{ createMediaHtml('/gallery/', media.url)|raw }}
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                      <div class="media-container">
+                        {{ createMediaHtml('/gallery/', media.url)|raw }}
+                        <div class='media-hover align-items-center text-center'>
+                          <div style='width: 100%;'>
+                            <i class='oi oi-zoom-in'></i>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   {% endfor %}
                 </div>

@@ -27,41 +27,38 @@ class TrickController extends AbstractController
     }
     
     /**
-    * @Route("/tricks/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"})
+    * @Route("/category/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"})
     */
-    public function tricks($categorySlug)
-    {
+   public function tricks($categorySlug)
+   {
 
-        /*$categoryId = 0;
-        if($categorySlug !== null) {
+       // 404 route for invalid category slugs
+       if($categorySlug !== "all") {
+           $category = $this->getDoctrine()->getRepository(Category::class)->findOneBySlug($categorySlug);
+           if(!$category) {
+               throw $this->createNotFoundException('Requested category slug not found');
+           }
+       }
 
-            $category = $this->getDoctrine()->getRepository(Category::class)->findOneBySlug($categorySlug)
-            if(!$category) {
-                throw $this->createNotFoundException('Requested category slug not found');
-            } else {
+       $trick = $this->getDoctrine()
+           ->getRepository(Trick::class)
+           ->findTricks(['categorySlug' => $categorySlug]);
 
-            }
-        }*/
+       $category = $this->getDoctrine()
+           ->getRepository(Trick::class)
+           ->findCategories();
 
-        $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findTricks(['categorySlug' => $categorySlug]);
+       return $this->render('tricks/tricks.html.twig', [
+           'trick_list' => $trick,
+           'category_list' => $category
+       ]);
 
-        $category = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findCategories();
-
-        return $this->render('tricks/tricks.html.twig', [
-            'trick_list' => $trick,
-            'category_list' => $category
-        ]);
-
-    }
+   }
  
     /**
      * @Route(
      *  "/load-results/{categorySlug}/{firstResult}/{orderBy}",
-     *  name="load_more",
+     *  name="load_results",
      *  methods={"GET"},
      *  requirements={"firstResult" = "\d+"},
      *  defaults={"categorySlug" = "all", "firstResult" = 1, "orderBy" = "creationDate-DESC"}
@@ -102,9 +99,9 @@ class TrickController extends AbstractController
            'comment_list' => $comment
        ]);
     }
-    
+   
     /**
-    * @Route("/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null})
+    * @Route("/tricks/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null})
     */
    public function singleTrick($trickSlug)
    {

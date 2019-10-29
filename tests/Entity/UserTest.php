@@ -67,4 +67,16 @@ class UserTest extends TestCase
         $this->assertSame('resettokentestvalue', $user->getResetToken());
     }
 
+    /**
+     * Unit test for User entity
+     *
+     * @return void
+     */
+    public function testGetAvatar()
+    {
+        $user = new User();
+        $user->setAvatar('person_1.jpg');
+        $this->assertSame('person_1.jpg', $user->getAvatar());
+    }
+
 }

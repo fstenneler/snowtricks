@@ -91,6 +91,20 @@ body {
 .trick-links .oi-trash {
   margin-left: 5px;
 }
+
+.btn-primary, .btn-danger {
+  min-width: 150px;
+}
+
+.btn-primary:hover, .btn-danger:hover {
+  background-color: black !important;
+  color: white !important;
+  border: 1px solid black !important;
+}
+
+.oi-trash:hover {
+  color: #dc3545 !important;
+}
 /* general custom -- */
 
 
@@ -405,7 +419,7 @@ body {
 }
 
 .single-tricks-page .tricks-list .main-view .tools a {
-  color: #666666;
+  color: #BFBFBF;
   margin: 0.2em;
   font-size: 1.2em;
 }
@@ -469,19 +483,35 @@ body {
   flex-wrap: wrap;
 }
 
-#media-zoom-window {
+#media-list .tools {
+  margin-top: -1.5em;
+  text-align: right;
+}
+
+#media-list .tools i {
+  color: #BFBFBF;
+  margin-left: 2px;
+  margin-right: 2px;
+  cursor: pointer;
+}
+
+#media-list .tools i:hover {
+  color: #209CEE;
+}
+
+.media-window {
   position: fixed;
   z-index: 9000;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
-  background: black;
+  background:black;
   color: white;
   display: none;
 }
 
-#media-zoom-window .close-zoom {
+.media-window .close-zoom {
   position: absolute;
   top: 10px;
   right: 30px;
@@ -490,7 +520,7 @@ body {
   font-weight: 600;
 }
 
-#media-zoom-window .zoom-media-container {
+.media-window .zoom-media-container {
   height: 100%;
   width: 100%;
   display: flex;
@@ -498,22 +528,87 @@ body {
   justify-content: center;  
 }
 
-#media-zoom-window .zoom-media-container .image {
+.media-window .zoom-media-container .image {
   width: 90%;
 } @media (max-width: 576px) {
-  #media-zoom-window .zoom-media-container .image {
+  .media-window .zoom-media-container .image {
     width: 100%;
   }
 }
 
-#media-zoom-window .zoom-media-container .video {
+.media-window .zoom-media-container .video {
   width: 90%;
   height: 90%;
 } @media (max-width: 576px) {
-  #media-zoom-window .zoom-media-container .video {
+  .media-window .zoom-media-container .video {
     width: 100%;
     height: 70%;
   }
+}
+
+.media-window .zoom-media-container .media-form {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  background-color: white;
+  border-radius: 5px;
+  color: #666666;
+  padding: 2em 3em 2em 3em;
+  position: relative;
+}
+
+#media-form-content {
+  display: none;
+}
+
+.media-form .title {
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  color: #209CEE;
+  line-height: 1.2;
+  font-weight: normal;
+  letter-spacing: 1px;
+  font-weight: 900;
+  font-style: italic;
+}
+
+.media-form .subtitle {
+  text-transform: uppercase;
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: 900;
+  color: #000;
+}
+
+.media-form .min-height {
+  min-height: 150px;
+}
+
+.media-form .video {
+  display: none;
+}
+
+.media-form .radio .media-type {
+  margin-right: 5px;
+}
+
+.media-form .radio span {
+  margin-right: 15px;
+  color: #000;
+}
+
+.media-form .picture input {
+  border: 0 !important;
+  height: auto !important;
+}
+
+.media-form .video input {
+  padding: 0 1em 0 1em;
+}
+
+.media-form .note {
+  font-size: 12px;
+  color: #C0C0C0;
 }
 
 .single-tricks-page .tricks-list .content .description {
@@ -596,6 +691,30 @@ body {
   margin-bottom: 5em !important;
 }
 
+.edit-trick-form {
+  max-width: 750px;
+  margin: auto;
+}
+
+.edit-trick-form label {
+  margin-top: 1.5em;
+}
+
+.edit-trick-form .form-control {
+  padding: 0 1em 0 1em;
+}
+
+.edit-trick-form select {
+  max-width: 50%;
+}
+.edit-trick-form textarea {
+  padding: 1em !important;
+  height: 500px !important;
+}
+
+.edit-trick-submit {
+ padding: 2em 0 2em 0;
+}
 /* single trick page custom -- */
 
 

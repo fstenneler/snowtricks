@@ -46,7 +46,6 @@
                             {{ form_row(form.password, { 'attr': { 'placeholder': 'Choose a password (6 to 20 cars)' }}) }}
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <button type="submit" class="btn py-3 px-4 btn-primary">Update account</button>
-                                <a class="account-link" href="{{ path('app_forgotten_password') }}">Forgot password ?</a>
                             {% else %}
                                 <button type="submit" class="btn py-3 px-4 btn-primary">Create an account</button>
                             {% endif %}

@@ -55,6 +55,11 @@ class User implements UserInterface
      */
     protected $resetToken;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Avatar;
+
 
     public function getId(): ?int
     {
@@ -158,6 +163,18 @@ class User implements UserInterface
     public function setResetToken(string $resetToken): self
     {
         $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->Avatar;
+    }
+
+    public function setAvatar(?string $Avatar): self
+    {
+        $this->Avatar = $Avatar;
 
         return $this;
     }

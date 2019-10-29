@@ -612,12 +612,13 @@
 	});
 
 	$("#media-list .media-container").click(function() {
+		
 		if($(this).children(".media").data("type") == "image") {
 			var mediaHtml = "<img class='image' src='" + $(this).children(".media").data("media") + "' alt='' />";
 		} else {
 			var mediaHtml = $(this).html();
 		}
-		$("body").prepend("<div id='media-zoom-window'><div class='close-zoom'>X</div><div class='zoom-media-container'>" + mediaHtml + "</div></div>");
+		$("body").prepend("<div id='media-zoom-window' class='media-window'><div class='close-zoom'>X</div><div class='zoom-media-container'>" + mediaHtml + "</div></div>");
 
 		if($(this).children(".media").data("type") != "image") {
 			$("#media-zoom-window .media-hover").remove();
@@ -632,6 +633,35 @@
 	});
 
 	/* media thumbnail control -- */
+
+
+	/* -- media edit control */
+
+	$("#media-list .edit").click(function() {
+		
+		var html = $("#media-form-content").html();
+		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+		$("#media-edit-window").fadeIn("fast");
+		$("#media-edit-window .close-zoom").click(function() {
+			$("#media-edit-window").fadeOut("fast");
+			$("#media-edit-window").remove();
+		});
+
+		$("input[type=radio][name=mediaType]").change(function() {
+			if($(this).val() == 'picture') {
+				$(".media-form .video").hide();
+				$(".media-form .picture").fadeIn("fast");
+			} else if($(this).val() == 'video') {
+				$(".media-form .picture").hide();
+				$(".media-form .video").fadeIn("fast");
+				$(".media-form .video input").focus();
+			}
+		});
+
+	});
+
+	/* media edit control -- */
+
 
 })(jQuery);
 

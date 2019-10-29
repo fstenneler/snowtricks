@@ -15,7 +15,7 @@
                     <li class="nav-item active"><a href="{{ path("home") }}" class="nav-link">Home</a></li>
                     <li class="nav-item"><a href="{{ path("tricks") }}" class="nav-link">Tricks</a></li>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <li class="nav-item"><a href="{{ path("manage_account") }}" class="nav-link">{{ app.user.userName }}</a></li>
+                        <li class="nav-item"><a href="{{ path("manage_account") }}" class="nav-link">Account</a></li>
                         <li class="nav-item"><a href="{{ path("app_logout") }}" class="nav-link">Logout</a></li>
                     {% else %}
                         <li class="nav-item"><a href="{{ path("app_login") }}" class="nav-link">Sign in</a></li>

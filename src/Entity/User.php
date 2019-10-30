@@ -68,8 +68,6 @@ class User implements UserInterface
      */
     private $activated = false;
 
-    private $avatarUploadDir;
-
 
     public function getId(): ?int
     {
@@ -220,7 +218,7 @@ class User implements UserInterface
 
     public function getAvatarUploadDir()
     {
-        return $this->avatarUploadDir = '/avatars';
+        return '/avatars';
     }
 
 }

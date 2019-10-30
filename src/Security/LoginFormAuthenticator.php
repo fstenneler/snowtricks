@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -26,8 +27,8 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
+    use ContainerAwareTrait;
 
-    private $container;
     private $entityManager;
     private $urlGenerator;
     private $csrfTokenManager;
@@ -35,7 +36,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $session;
 
     public function __construct(
-        ContainerInterface $container,
         EntityManagerInterface $entityManager,
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
@@ -44,7 +44,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         Security $security
     )
     {
-        $this->container = $container;
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;

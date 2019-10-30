@@ -101,7 +101,7 @@ class RegisterHandler
 
         $token = $user->getToken();
 
-        if($token == null) {
+        if($token === null) {
             $this->session->getFlashBag()->add('body-error', 'The token is not defined, please try again.');
             return false;
         }

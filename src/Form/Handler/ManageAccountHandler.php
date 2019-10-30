@@ -40,17 +40,25 @@ class ManageAccountHandler
     public function handle(Request $request, Form $form, User $user)
     {
 
-        if($request->isMethod('POST')) {
+        // set default values to register form
+        $form->get('userName')->setData($user->getUserName());
+        $form->get('email')->setData($user->getEmail());
+
+        // update account form
+        if($request->isMethod('POST') && $request->request->get('registration')) {
 
             $formIsValid = true;
 
+            // get form values
             $newEmail = $request->request->get('registration')['email'];
             $newUserName = $request->request->get('registration')['userName'];
             $newPassword = $request->request->get('registration')['password'];
 
+            // set requested values to form
             $form->get('userName')->setData($newUserName);
             $form->get('email')->setData($newEmail);
 
+            // test csrf token
             $token = new CsrfToken('registration', $request->request->get('registration')['_token']);
             if (!$this->csrfTokenManager->isTokenValid($token)) {
                 throw new InvalidCsrfTokenException();
@@ -71,9 +79,6 @@ class ManageAccountHandler
             // check if the password is correct     
             if(strlen($newPassword) < 6) {
                 $form->get('password')->addError(new FormError('Your password must be at least 6 characters long.'));
-                $formIsValid = false;
-            } elseif(strlen($newPassword) > 20) {
-                $form->get('password')->addError(new FormError('Your password cannot ne longer than 20 characters.'));
                 $formIsValid = false;
             }
        
@@ -103,11 +108,6 @@ class ManageAccountHandler
             }
 
             return ['success' => false, 'form' => $form];
-
-        } else {
-
-            $form->get('userName')->setData($user->getUserName());
-            $form->get('email')->setData($user->getEmail());
 
         }
     

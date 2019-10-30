@@ -1,7 +1,7 @@
 {% for comment in comment_list %}
     <li class="comment">
         <div class="vcard bio">
-            <img src="/avatars/{{ comment.user.avatar }}" alt="Image placeholder">
+            <img src="{{ comment.user.avatarUploadDir }}/{{ comment.user.avatar }}" alt="Image placeholder">
         </div>
         <div class="comment-body">
             <h3>{{ comment.user.userName }}</h3>

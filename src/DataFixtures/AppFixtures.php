@@ -31,6 +31,7 @@ class AppFixtures extends Fixture
             $user->setEmail('user' . $i . '@orlinstreet.rocks');
             $user->setPassword($this->passwordEncoder->encodePassword($user,'azerty'));
             $user->setAvatar('person_' . rand(1,4) . '.jpg');
+            $user->setActivated(true);
             $manager->persist($user);
             $this->addReference('user-' . $i, $user);
         }

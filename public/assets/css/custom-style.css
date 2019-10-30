@@ -105,6 +105,61 @@ body {
 .oi-trash:hover {
   color: #dc3545 !important;
 }
+
+@media (max-width: 1316px) {
+  .ftco-navbar-light {
+    bottom: 0;
+    top: auto;
+  }
+  .ftco-navbar-light.scrolled {
+    bottom: 0;
+    top: auto;
+  }
+}
+
+.navbar .mobile-icon {
+  color: white;
+  font-size: 1.5em;
+  display: none;
+}
+
+@media (max-width: 580px) {
+  .navbar {
+    padding: 15px 40px 15px 40px;
+  }
+  .navbar-toggler, .navbar-brand {
+    display: none;
+  }
+  .navbar .mobile-icon {
+    display: inline-block;
+  }
+  .ftco-navbar-light.scrolled{
+    background: black !important;
+  }
+}
+
+.body-alert {
+  padding: 0 !important;
+}
+
+.body-alert .container {
+  padding: 0 !important;
+} @media (min-width: 1200px) {
+  .body-alert .container {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 1316px) {
+  .body-alert {
+      display: block !important;
+  }
+}
+
+.alert-danger a {
+  color: #721c24;
+  font-weight: 600;
+}
 /* general custom -- */
 
 
@@ -745,10 +800,25 @@ body {
   padding: 0 2em 2em 2em;
   background: white !important;
   max-width: 500px;
+  width: 95%;
 } @media (max-width: 900px) {
   .user-page .heading .container {
     border-radius: 0;
   }
+}
+
+.user-page .avatar-container {
+  padding-top: 30px;
+}
+.user-page .avatar {
+  width: 100%;
+}
+.user-page .avatar-link {
+  display: inline-block;
+  margin-top: 5px;
+  cursor: pointer;
+  color: #000;
+  text-decoration: underline;
 }
 
 .user-page .heading h1 {
@@ -764,6 +834,7 @@ body {
 } @media (max-width: 576px) {
   .user-page .heading h1 {
     font-size: 2rem;
+    margin-bottom: 0.2rem;
   }
 }
 
@@ -776,10 +847,15 @@ body {
   font-weight: 900;
   letter-spacing: 4px;
   color: #000;
+} @media (max-width: 576px) {
+  .user-page .heading h2 {
+    font-size: 14px;;
+    letter-spacing: 2px;
+  }
 }
 
 .user-page .form {
-  padding: 1.5em 8% 1.5em 8%;
+  padding: 2em 8% 1.5em 8%;
 } @media (max-width: 576px) {
   .user-page .form {
     padding: 1.5em 0 1.5em 0;
@@ -820,6 +896,52 @@ body {
 }
 
 .user-page .view-account .row .text-right {
+  color: #C0C0C0;
+}
+
+.media-window .zoom-media-container .change-avatar {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  background-color: white;
+  border-radius: 5px;
+  color: #666666;
+  padding: 2em 3em 2em 3em;
+  position: relative;
+}
+
+#change-avatar-content {
+  display: none;
+}
+
+.change-avatar .title {
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  color: #209CEE;
+  line-height: 1.2;
+  font-weight: normal;
+  letter-spacing: 1px;
+  font-weight: 900;
+  font-style: italic;
+}
+
+.change-avatar .subtitle {
+  text-transform: uppercase;
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: 900;
+  color: #000;
+}
+
+.change-avatar .picture input {
+  border: 0 !important;
+  height: auto !important;
+}
+
+.change-avatar .note {
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+  font-size: 12px;
   color: #C0C0C0;
 }
 

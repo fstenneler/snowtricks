@@ -60,7 +60,8 @@ class ForgottenPassswordHandler
             try {
 
                 // save token into database
-                $user->setResetToken($token);
+                $user->setToken($token);
+                $user->setTokenCreationDate(new \DateTime());
                 $this->manager->persist($user);
                 $this->manager->flush();
 

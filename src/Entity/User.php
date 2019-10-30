@@ -44,21 +44,31 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      * @Assert\Length(
      *     min = "6",
-     *     max = "20",
-     *     minMessage = "Your password must be at least {{ limit }} characters long"),
-     *     maxMessage = "Your password cannot ne longer than {{ limit }} characters")
+     *     minMessage = "Your password must be at least {{ limit }} characters long")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $resetToken;
+    private $avatar;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $Avatar;
+    protected $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenCreationDate;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $activated = false;
+
+    private $avatarUploadDir;
 
 
     public function getId(): ?int
@@ -150,33 +160,67 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
     }
 
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
     /**
-     * Reset token
+     * Token
      *
      * @see UserInterface
      */
-    public function getResetToken(): string
+    public function getToken(): string
     {
-        return $this->resetToken;
+        return $this->token;
     }
 
-    public function setResetToken(string $resetToken): self
+    public function setToken(string $token): self
     {
-        $this->resetToken = $resetToken;
+        $this->token = $token;
 
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getTokenCreationDate(): ?\DateTimeInterface
     {
-        return $this->Avatar;
+        return $this->tokenCreationDate;
     }
 
-    public function setAvatar(?string $Avatar): self
+    public function setTokenCreationDate(?\DateTimeInterface $tokenCreationDate): self
     {
-        $this->Avatar = $Avatar;
+        $this->tokenCreationDate = $tokenCreationDate;
 
         return $this;
+    }
+
+    public function getActivated(): ?bool
+    {
+        return $this->activated;
+    }
+
+    public function setActivated(bool $activated): self
+    {
+        $this->activated = $activated;
+
+        return $this;
+    }
+
+    public function getAbsoluteAvatarUploadPath()
+    {
+        return __DIR__.'/../../public' . $this->getAvatarUploadDir();
+    }
+
+    public function getAvatarUploadDir()
+    {
+        return $this->avatarUploadDir = '/avatars';
     }
 
 }

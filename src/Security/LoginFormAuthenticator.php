@@ -109,7 +109,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('User name could not be found');
         }
-
+        
+        if(!$user->getActivated()) {
+            // fail activation with a custom error
+            $errorMessage = 'This user account has not been activated, please check your mailbox. If you didn\'t receive the mail, please click ';
+            $errorMessage .= '<a href="' . $this->urlGenerator->generate('app_resend_activation_token', ['userName' => $credentials['userName']]) . '">here</a>';
+            $errorMessage .= ' to send it again.';
+            throw new CustomUserMessageAuthenticationException($errorMessage);
+        }
         return $user;
     }
 

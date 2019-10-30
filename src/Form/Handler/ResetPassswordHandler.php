@@ -43,10 +43,16 @@ class ResetPassswordHandler
                 return ['success' => false];
             }
 
+            // if token was created more than 30 days before, display an error message
+            if($user->getTokenCreationDate()->diff(new \DateTime()) > 30) {
+                $this->addFlash('error', 'This email was sent over 30 days ago, please try again.');
+                return ['success' => false];
+            }
+
             try {
             
                 // empty the reset token for this user
-                $user->setResetToken('');
+                $user->setToken('');
 
                 // encode password
                 $user->setPassword(
@@ -58,7 +64,7 @@ class ResetPassswordHandler
                 $this->manager->persist($user);
                 $this->manager->flush();
     
-                $this->session->getFlashBag()->add('success', 'Your password has been successfully updated');
+                $this->session->getFlashBag()->add('body-success', 'Your password has been successfully updated');
     
                 return ['success' => true];
 

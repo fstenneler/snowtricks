@@ -331,6 +331,47 @@
 	});
 
 	$('.appointment_time').timepicker();
+	
+
+	/* -- auto adjust user page height */
+
+	function adjustUserPageHeight() {
+		var boxTop = ($(window).height() - $(".user-page-box").height()) / 2;
+		$(".user-page").height($(window).height());
+		$(".user-page").css("padding-top", 0);
+		$(".user-page-section").css("padding-top", 0);
+		$(".user-page-section").css("top", boxTop);
+	}
+
+	$(window).resize(function() {
+		adjustUserPageHeight();
+	});
+	adjustUserPageHeight();
+
+	/* auto adjust user page height -- */
+
+
+	/* -- change avatar control */
+
+	function displayAvatarWindow() {
+		var html = $("#change-avatar-content").html();
+		$("body").prepend("<div id='change-avatar-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='change-avatar'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+		$("#change-avatar-window").fadeIn("fast");
+		$("#change-avatar-window .close-zoom").click(function() {
+			$("#change-avatar-window").fadeOut("fast");
+			$("#change-avatar-window").remove();
+		});
+	}
+
+	$("#js-change-avatar").click(function() {
+		displayAvatarWindow();
+	})
+
+	if($("#change-avatar-submit").data("submitted") == true && $("#change-avatar-submit").data("valid") == "") {
+		displayAvatarWindow();
+	}
+
+	/* change avatar control -- */
 
 
 	/* -- go top button */

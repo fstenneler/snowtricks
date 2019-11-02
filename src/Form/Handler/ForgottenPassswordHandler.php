@@ -3,37 +3,35 @@
 namespace App\Form\Handler;
 
 use App\Entity\User;
+use App\Services\SendMail;
+use App\Services\GenerateToken;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
-use Symfony\Component\Templating\EngineInterface;
 
 
 class ForgottenPassswordHandler
 {
-    private $manager;
-    private $tokenGenerator;
-    private $mailer;
     private $session;
-    private $router;
+    private $manager;
+    private $passwordEncoder;
+    private $sendMail;
+    private $generateToken;
 
     public function __construct(
-        ObjectManager $manager,
-        TokenGeneratorInterface $tokenGenerator, 
-        \Swift_Mailer $mailer,
         SessionInterface $session,
-        UrlGeneratorInterface $router,
-        \Twig_Environment $templating
+        ObjectManager $manager,
+        SendMail $sendMail,
+        GenerateToken $generateToken
     )
     {
-        $this->manager = $manager;
-        $this->tokenGenerator = $tokenGenerator;
-        $this->mailer = $mailer;
         $this->session = $session;
-        $this->router = $router;
-        $this->templating = $templating;
+        $this->manager = $manager;
+        $this->sendMail = $sendMail;
+        $this->generateToken = $generateToken;
     }
         
     public function handle(Request $request)
@@ -47,53 +45,29 @@ class ForgottenPassswordHandler
             $user = $this->manager
                 ->getRepository(User::class)
                 ->findOneBy(['email' => $email]);
-
-            // if user not found, refresh the page with an error message
             if(!$user) {
                 $this->session->getFlashBag()->add('error', 'Email address "' . $email . '" could not be found');
                 return ['success' => false];
             }
 
             // generate token
-            $token = $this->tokenGenerator->generateToken();
-
-            try {
-
-                // save token into database
-                $user->setToken($token);
-                $user->setTokenCreationDate(new \DateTime());
-                $this->manager->persist($user);
-                $this->manager->flush();
-
-                // generate an absolute url containing token
-                $url = $this->router->generate('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL); 
-
-                // send an email (HTML + txt) with the reset password link
-                $message = (new \Swift_Message('Reset your password'))
-                    ->setFrom('snowtricks@orlinstreet.rocks')
-                    ->setTo($user->getEmail())
-                    ->setBody(
-                        $this->templating->render(
-                            'emails/reset_password.html.twig',
-                            ['user' => $user, 'url' => $url]
-                        ),
-                        'text/html'
-                    )
-                    ->addPart(
-                        $this->templating->render(
-                            'emails/reset_password.txt.twig',
-                            ['user' => $user, 'url' => $url]
-                        ),
-                        'text/plain'
-                    );
-                $this->mailer->send($message);
-
-            } catch(\Exception $e) {
-                $this->session->getFlashBag()->add('error', 'The message could not been sent : ' . $e);
+            $user = $this->generateToken->generate($user);
+            if($user->getToken() === null) {
+                $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : Token error');
                 return ['success' => false];
             }
             
-            $this->session->getFlashBag()->add('success', 'We just sent an email to this address');
+            // save token into database
+            $this->manager->persist($user);            
+            $this->manager->flush();
+            
+            // send password reset mail
+            $sendResult = $this->sendMail->sendPasswordResetMail($user);
+            if($sendResult !== true) {
+                $this->session->getFlashBag()->add('error', 'An unexpected error has occured while sending the password reset mail : ' . $sendResult);
+                return ['success' => false];
+            }
+
             return ['success' => true];
 
         }

@@ -3,13 +3,14 @@
 namespace App\Form\Handler;
 
 use App\Entity\User;
+use App\Services\SendMail;
+use App\Services\GenerateToken;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -20,28 +21,22 @@ class RegisterHandler
     private $session;
     private $manager;
     private $passwordEncoder;
-    private $tokenGenerator;
-    private $router;
-    private $templating;
-    private $mailer;
+    private $sendMail;
+    private $generateToken;
 
     public function __construct(
         SessionInterface $session,
         ObjectManager $manager,
         UserPasswordEncoderInterface $passwordEncoder,
-        TokenGeneratorInterface $tokenGenerator,
-        UrlGeneratorInterface $router,
-        \Twig_Environment $templating,
-        \Swift_Mailer $mailer
+        SendMail $sendMail,
+        GenerateToken $generateToken
     )
     {
         $this->session = $session;
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
-        $this->tokenGenerator = $tokenGenerator;
-        $this->router = $router;
-        $this->templating = $templating;
-        $this->mailer = $mailer;
+        $this->sendMail = $sendMail;
+        $this->generateToken = $generateToken;
     }
 
     /**
@@ -67,69 +62,29 @@ class RegisterHandler
             );
 
             // generate token
-            $token = $this->tokenGenerator->generateToken();
-            $user->setToken($token);
-            $user->setTokenCreationDate(new \DateTime());
+            $user = $this->generateToken->generate($user);
+            if($user->getToken() === null) {
+                $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : Token error');
+                return ['success' => false, 'form' => $form];
+            }
 
             // save data into database
             $this->manager->persist($user);
             $this->manager->flush();
-
+            
             // send activation mail
-            if(!$this->sendActivationMail($user)) {
-                $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail');
-                return ['success' => false];
+            $sendResult = $this->sendMail->sendActivationMail($user);
+            if($sendResult !== true) {
+                $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : ' . $sendResult);
+                return ['success' => false, 'form' => $form];
             }
             
             $this->session->getFlashBag()->add('body-success', 'We just sent you an email. Please check your mailbox and click the given link to activate your account.');
-
-            return ['success' => true];
+            return ['success' => true, 'form' => $form];
 
         }
 
         return ['success' => false, 'form' => $form];
-    }
-
-    /**
-     * Send activation mail
-     *
-     * @param User $user
-     * @return bool
-     */
-    public function sendActivationMail(User $user)
-    {
-
-        $token = $user->getToken();
-
-        if($token === null) {
-            $this->session->getFlashBag()->add('body-error', 'The token is not defined, please try again.');
-            return false;
-        }
-
-        // generate an absolute url containing token
-        $url = $this->router->generate('app_activate_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL); 
-
-        // send an email (HTML + txt) with the reset password link
-        $message = (new \Swift_Message('Reset your password'))
-            ->setFrom('snowtricks@orlinstreet.rocks')
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->templating->render(
-                    'emails/activate_account.html.twig',
-                    ['user' => $user, 'url' => $url]
-                ),
-                'text/html'
-            )
-            ->addPart(
-                $this->templating->render(
-                    'emails/activate_account.txt.twig',
-                    ['user' => $user, 'url' => $url]
-                ),
-                'text/plain'
-            );
-
-        return $this->mailer->send($message);
-
     }
 
 }

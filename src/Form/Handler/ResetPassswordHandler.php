@@ -5,6 +5,7 @@ namespace App\Form\Handler;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -14,20 +15,33 @@ class ResetPassswordHandler
     private $manager;
     private $session;
     private $passwordEncoder;
+    private $em;
 
     public function __construct(
         ObjectManager $manager,
         SessionInterface $session,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder,
+        EntityManagerInterface $em
     )
     {
         $this->manager = $manager;
         $this->session = $session;
         $this->passwordEncoder = $passwordEncoder;
+        $this->em = $em;
     }
         
-    public function handle(Request $request, User $user, $token)
+    public function handle(Request $request, $token)
     {
+        // search the user with requested token
+        $user = $this->em
+            ->getRepository(User::class)
+            ->findOneBy(['token' => $token]);
+
+        // if user not found, display an error message
+        if(!$user) {            
+            $this->session->getFlashBag()->add('error', 'Token error, please try again');
+            return ['success' => false];
+        }
 
         // test if form is submitted
         if($request->isMethod('POST')) {
@@ -38,43 +52,30 @@ class ResetPassswordHandler
             if(strlen($newPassword) < 6) {
                 $this->session->getFlashBag()->add('error', 'Your password must be at least 6 characters long.');
                 return ['success' => false];
-            } elseif(strlen($newPassword) > 20) {
-                $this->session->getFlashBag()->add('error', 'Your password cannot ne longer than 20 characters.');
-                return ['success' => false];
             }
 
             // if token was created more than 30 days before, display an error message
-            if($user->getTokenCreationDate()->diff(new \DateTime()) > 30) {
+            if($user->getTokenCreationDate()->diff(new \DateTime())->days > 30) {
                 $this->addFlash('error', 'This email was sent over 30 days ago, please try again.');
                 return ['success' => false];
             }
-
-            try {
             
-                // empty the reset token for this user
-                $user->setToken('');
+            // empty the reset token for this user
+            $user->setToken('');
+            
+            // encode password
+            $user->setPassword(
+                $this->passwordEncoder->encodePassword($user, $newPassword)
+            );
 
-                // encode password
-                $user->setPassword(
-                    $this->passwordEncoder->encodePassword($user, $newPassword)
-                );
+            // set new password
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $request->request->get('password')));
 
-                // save new password
-                $user->setPassword($this->passwordEncoder->encodePassword($user, $request->request->get('password')));
-                $this->manager->persist($user);
-                $this->manager->flush();
-    
-                $this->session->getFlashBag()->add('body-success', 'Your password has been successfully updated');
-    
-                return ['success' => true];
+            // save data
+            $this->manager->persist($user);
+            $this->manager->flush();
 
-            } catch(\Exception $e) {
-
-                $this->session->getFlashBag()->add('error', 'An unexpected error has occurred : ' . $e);
-
-            }
-
-            return ['success' => false];
+            return ['success' => true];
 
         }
 

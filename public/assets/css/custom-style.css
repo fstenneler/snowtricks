@@ -160,6 +160,11 @@ body {
   color: #721c24;
   font-weight: 600;
 }
+
+.form-error-message {
+  color: #000 !important;  
+  margin-left: 5px;
+}
 /* general custom -- */
 
 

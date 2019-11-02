@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Util\Slug;
+use App\Services\Slug;
 use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Trick;

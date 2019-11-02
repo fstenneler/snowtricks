@@ -3,24 +3,27 @@
 namespace App\Form\Handler;
 
 use App\Entity\User;
+use App\Services\FileUpload;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ManageAvatarHandler
 {
     private $session;
     private $manager;
+    private $fileUpload;
 
     public function __construct(
         SessionInterface $session,
-        ObjectManager $manager
+        ObjectManager $manager,
+        FileUpload $fileUpload
     )
     {
         $this->session = $session;
         $this->manager = $manager;
+        $this->fileUpload = $fileUpload;
     }
         
     public function handle(Request $request, Form $form, User $user)
@@ -33,24 +36,19 @@ class ManageAvatarHandler
         if($form->isSubmitted() && $form->isValid()) {
 
             $avatarFile = $form['avatar']->getData();
-            $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-               
-            // this is needed to safely include the file name as part of the URL
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension();
 
-            // Move the file to the directory
-            try {
-                $avatarFile->move(
-                    $user->getAbsoluteAvatarUploadPath(),
-                    $newFilename
-                );
-            } catch (FileException $e) {
-                $this->session->getFlashBag()->add('avatar-error', 'An unexpected error has occurred. Please try again.');
+            $uploadResult = $this->fileUpload->upload(
+                $avatarFile,
+                $user->getAbsoluteAvatarUploadPath()
+            );
+            
+            if($uploadResult['success'] !== true) {
+                $this->session->getFlashBag()->add('avatar-error', 'An unexpected error has occurred : ' . $uploadResult['error']);
+                return ['success' => false];
             }
 
             // set the avatar value
-            $user->setAvatar($newFilename);
+            $user->setAvatar($uploadResult['fileName']);
 
             // store data into database
             $this->manager->persist($user);

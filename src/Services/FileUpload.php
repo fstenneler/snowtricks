@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 
@@ -11,11 +12,11 @@ class FileUpload
     /**
      * Upload form submitted file
      *
-     * @param UploadFile $file
+     * @param UploadedFile $file
      * @param string $destinationPath
      * @return Array
      */
-    public function upload($file, $destinationPath)
+    public function upload(UploadedFile $file, $destinationPath)
     {
 
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

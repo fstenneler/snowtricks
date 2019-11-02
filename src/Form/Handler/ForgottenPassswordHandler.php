@@ -17,7 +17,6 @@ class ForgottenPassswordHandler
 {
     private $session;
     private $manager;
-    private $passwordEncoder;
     private $sendMail;
     private $generateToken;
 

@@ -11,7 +11,7 @@ class FileUpload
     /**
      * Upload form submitted file
      *
-     * @param [type] $file
+     * @param UploadFile $file
      * @param string $destinationPath
      * @return Array
      */
@@ -39,4 +39,3 @@ class FileUpload
     }
 
 }
-   

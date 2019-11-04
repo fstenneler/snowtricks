@@ -28,7 +28,7 @@ class VideoHandler
         $this->video = $video;
     }
         
-    public function handle(Request $request, Form $form, Media $media)
+    public function handle(Request $request, Form $form, Media $media, $action)
     {   
 
         // handle requested data
@@ -56,10 +56,18 @@ class VideoHandler
             $this->manager->flush();
 
             $this->success = true;
-            $this->session->getFlashBag()->add('picture-success', 'Your media file has been successfully uploaded.');
+            $this->session->getFlashBag()->add('video-success', 'Your media file has been successfully uploaded.');
             return $this;
 
         }
+        
+        // delete media mode
+        if($action === "confirm_deletion" && $this->video->isVideo($media->getUrl())) {
+            $this->manager->remove($media);
+            $this->manager->flush();
+            $this->session->getFlashBag()->add('delete-media-success', 'The media file has been deleted.');
+            return $this;
+        } 
 
         $form->get('url')->setData('');
 

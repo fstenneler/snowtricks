@@ -615,26 +615,32 @@
 
 	/* -- display medias in mobile version */
 
-	$("#js-display-media").click(function() {
-		$("#js-display-media .loader").css("opacity", 1);
-		$("#media-list").toggle("fast", function(){
-			$("#js-display-media .loader").css("opacity", 0);
-			if($("#media-list").is(":visible")) {
-				$("#js-display-media .txt").html("Hide medias");
+	function bindDisplayMedia() {
+		$("#js-display-media").click(function() {
+			$("#js-display-media .loader").css("opacity", 1);
+			$("#media-list").toggle("fast", function(){
+				$("#js-display-media .loader").css("opacity", 0);
+				if($("#media-list").is(":visible")) {
+					$("#js-display-media .txt").html("Hide medias");
+				} else {
+					$("#js-display-media .txt").html("See medias");
+				}
+			});
+		});
+	}
+	bindDisplayMedia();
+
+	function bindWindowResize() {
+		$( window ).resize(function() {
+			if($(window).width() > 576) {
+				$("#media-list").show();
+				$("#media-list").css("display", "flex");
 			} else {
-				$("#js-display-media .txt").html("See medias");
+				$("#media-list").hide();
 			}
 		});
-	});
-
-	$( window ).resize(function() {
-		if($(window).width() > 576) {
-			$("#media-list").show();
-			$("#media-list").css("display", "flex");
-		} else {
-			$("#media-list").hide();
-		}
-	});
+	}
+	bindWindowResize();
 
 	/* display medias in mobile version -- */
 
@@ -678,10 +684,8 @@
 
 	/* -- Ajax media form functions */	
 
-	// click on media edit pen load the form in new popin
-	$("#media-list .edit").click(function() {
-		
-		var url = $(this).data("url");
+	// popin media form ajax loader
+	function loadMediaForm(url, mediaListUrl) {
 
 		$.ajax({
 			method: "GET",
@@ -690,12 +694,47 @@
 				if(html != "") {
 					displayMediaFormPopin(html);
 					bindMediaFormRadioClick();
-					bindMediaFormSubmit(url);
+					bindMediaFormSubmit(url, mediaListUrl);
 				}
 			}
-		});			
+		});	
 
-	});	
+	}
+
+	// click on media edit pen load the form in new popin
+	function bindMediaEditClick() {
+
+		$("#media-list .edit").click(function() {		
+			var url = $(this).data("url");
+			var mediaListUrl = $("#media-list").data("media-list-url");
+			loadMediaForm(url, mediaListUrl);
+		});	
+
+	}
+	bindMediaEditClick();
+
+	// click on media delete trash load the form in new popin
+	function bindMediaDeleteClick() {
+
+		$("#media-list .delete").click(function() {		
+			var url = $(this).data("url");
+			var mediaListUrl = $("#media-list").data("media-list-url");
+			loadMediaForm(url, mediaListUrl);
+		});	
+
+	}
+	bindMediaDeleteClick();
+
+	function bindMediaAddClick() {
+
+		$("#media-list .add").click(function() {		
+			var url = $(this).data("url");
+			var mediaListUrl = $("#media-list").data("media-list-url");
+			loadMediaForm(url, mediaListUrl);
+		});	
+
+	}
+	bindMediaAddClick();
 
 	// popin creation function
 	function displayMediaFormPopin(html) {
@@ -707,6 +746,9 @@
 			$("#media-edit-window").remove();
 		});
 
+		bindConfirmMediaDeleteClick();
+		bindCancelMediaDeleteClick();
+		
 	}
 
 	// bind the change form radio click
@@ -734,23 +776,47 @@
 	}
 
 	// bind the form submit
-	function bindMediaFormSubmit(url) {
+	function bindMediaFormSubmit(url, mediaListUrl) {
 
 		$("form[name='picture']").submit(function(e) {
 			var formData = new FormData(this);
-			mediaFormSubmit(formData, url, "picture");
+			mediaFormSubmit(formData, url, mediaListUrl, "picture");
 			e.preventDefault(); // prevent normal submit
 		});
 		$("form[name='video']").submit(function(e) {
 			var formData = new FormData(this);
-			mediaFormSubmit(formData, url, "video");			
+			mediaFormSubmit(formData, url, mediaListUrl, "video");			
 			e.preventDefault(); // prevent normal submit
 		});
 
 	}
 
+	// bind confirm delete media click
+	function bindConfirmMediaDeleteClick() {
+		$("#delete-media-confirm").click(function() {
+			$.ajax({
+				method: "GET",
+				url: $(this).data("url"),
+				success: function(html){
+					if(html != "") {
+						$("#js-form-result").html(html);
+						loadMediaList($("#media-list").data("media-list-url"));
+					}
+				}
+			});
+		});
+	}
+
+	// bind cancel delete media click
+	function bindCancelMediaDeleteClick() {
+		$("#delete-media-cancel").click(function() {
+			$("#media-edit-window").fadeOut("fast");
+			$("#media-edit-window").remove();
+		});
+	}
+
 	// ajax form submit function
-	function mediaFormSubmit(formData, url, formName) {		
+	function mediaFormSubmit(formData, url, mediaListUrl, formName) {		
 	
 		// process the form
 		$.ajax({
@@ -761,8 +827,8 @@
 				$("#js-form-result").html(data);
 				switchMediaForm(formName);
 				bindMediaFormRadioClick();
-				bindMediaFormSubmit(url);
-				loadMediaList();
+				bindMediaFormSubmit(url, mediaListUrl);
+				loadMediaList(mediaListUrl);
 			},
 			cache: false,
 			contentType: false,
@@ -772,16 +838,21 @@
 	}
 
 	// ajax reload trick media list
-	function loadMediaList() {
+	function loadMediaList(url) {
 		$.ajax({
 			method: "GET",
-			url: '/tricks/trick-9/media-list-edit',
+			url: url,
 			success: function(html){
 				if(html != "") {
 					$("#js-media-list-container").html(html);
+					bindMediaEditClick();
+					bindMediaDeleteClick();
+					bindMediaAddClick();
+					bindDisplayMedia();
+					bindWindowResize();
 				}
 			}
-		});			
+		});
 	}
 	
 	/* Ajax media form functions -- */

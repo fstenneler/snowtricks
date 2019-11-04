@@ -672,6 +672,22 @@ body {
   margin-bottom: 1em;
 }
 
+.delete-media-control {
+  margin-top: 2.5em;
+}
+
+.add-media {
+  color: #BFBFBF;
+  text-align: center;
+  font-size: 4em;
+  padding-top: 0.3em;
+  cursor: pointer;
+}
+
+.add-media:hover {
+  color: #209CEE;
+}
+
 .single-tricks-page .tricks-list .content .description {
   padding: 1.5em 8% 1.5em 8%;
 }

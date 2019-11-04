@@ -1,7 +1,7 @@
 {% for trick in trick_list %}
     <div class="col-xl-2dot4 col-lg-3 col-md-4 col-sm-6 d-flex ftco-animate">
         <div class="blog-entry justify-content-end">
-            <a href="{{ path('single_trick', {trickSlug: trick.slug}) }}" class="block-20" style="background-image: url('/gallery/{{ trick.media|first.url }}');"></a>
+            <a href="{{ path('single_trick', {trickSlug: trick.slug}) }}" class="block-20" style="background-image: url('/gallery/{{ trick.mediaHeader }}');"></a>
             <div class="text p-4 float-right d-block">
                 <div class="trick-heading">
                     <div class="trick-title">

@@ -22,11 +22,6 @@ class Media
     private $url;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isHeader;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="media")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -45,18 +40,6 @@ class Media
     public function setUrl(string $url): self
     {
         $this->url = $url;
-
-        return $this;
-    }
-
-    public function isHeader(): ?bool
-    {
-        return $this->isHeader;
-    }
-
-    public function setHeader(bool $isHeader): self
-    {
-        $this->isHeader = $isHeader;
 
         return $this;
     }

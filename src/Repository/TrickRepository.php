@@ -52,7 +52,7 @@ class TrickRepository extends ServiceEntityRepository
         // do query
         $qb = $this->createQueryBuilder('t')
             ->addSelect('m')
-            ->leftJoin('t.media', 'm', 'WITH', 'm.isHeader = 1')
+            ->leftJoin('t.media', 'm', 'WITH', null, 'm.id')
             ->orderBy('t.' . $request['orderByField'], $request['orderByDirection'])
             ->setFirstResult($request['firstResult'])
             ->setMaxResults($request['maxResults']);

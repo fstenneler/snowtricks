@@ -3,11 +3,14 @@
 namespace App\Form\Handler;
 
 use App\Entity\Media;
+use App\Services\Video;
 use App\Services\FileUpload;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class PictureHandler
 {
@@ -16,19 +19,22 @@ class PictureHandler
     private $fileUpload;
     private $success = false;
     private $form;
+    private $video;
 
     public function __construct(
         SessionInterface $session,
         ObjectManager $manager,
-        FileUpload $fileUpload
+        FileUpload $fileUpload,
+        Video $video
     )
     {
         $this->session = $session;
         $this->manager = $manager;
         $this->fileUpload = $fileUpload;
+        $this->video = $video;
     }
         
-    public function handle(Request $request, Form $form, Media $media)
+    public function handle(Request $request, Form $form, Media $media, $action)
     {   
 
         // handle requested data
@@ -61,6 +67,23 @@ class PictureHandler
             return $this;
 
         }
+        
+        // delete media mode
+        if($action === "confirm_deletion" && !$this->video->isVideo($media->getUrl())) {
+            $filesystem = new Filesystem();
+            try {
+                $filesystem->remove([
+                    $media->getAbsoluteUploadPath() . '/' . $media->getUrl()
+                ]);
+            } catch (IOExceptionInterface $exception) {
+                $this->addFlash('delete-media-error', 'An unexpected error has occurred while deleting the media file : ' . $exception->getMessage() .'.');
+                return $this;
+            }
+            $this->manager->remove($media);
+            $this->manager->flush();
+            $this->session->getFlashBag()->add('delete-media-success', 'The media file has been deleted.');
+            return $this;
+        } 
 
         return $this;
     }

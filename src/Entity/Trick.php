@@ -135,28 +135,15 @@ class Trick
         return $this->media;
     }
 
-    /*public function addMedium(Media $medium): self
+    public function getMediaHeader()
     {
-        if (!$this->media->contains($medium)) {
-            $this->media[] = $medium;
-            $medium->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMedium(Media $medium): self
-    {
-        if ($this->media->contains($medium)) {
-            $this->media->removeElement($medium);
-            // set the owning side to null (unless already changed)
-            if ($medium->getTrick() === $this) {
-                $medium->setTrick(null);
+        foreach($this->getMedia() as $media) {
+            if(preg_match("#.(jpg|jpeg|png|gif)$#", $media->getUrl())) {
+                return $media->getUrl();
             }
         }
-
-        return $this;
-    }*/
+        return null;
+    }
 
     public function getCategory(): ?Category
     {

@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController
 {
+
     /**
      * @Route("/", name="home", methods={"GET","HEAD"})
      */
@@ -83,7 +84,7 @@ class TrickController extends AbstractController
                 'firstResult' => $firstResult,
                 'orderBy' => $orderBy
             ]);
- 
+
         return $this->render('tricks/_tricks.html.twig', [
             'trick_list' => $trick
         ]);
@@ -197,17 +198,25 @@ class TrickController extends AbstractController
    
     /**
     * @Route(
-    *   "/tricks/{trickSlug}/edit-media/{mediaId}",
+    *   "/tricks/{trickSlug}/edit-media/{action}/{mediaId}",
     *   name="edit_media", methods={"POST","GET"},
-    *   defaults={"trickSlug" = null, "mediaId" = 0},
-    *   requirements={"trickSlug"="[a-z0-9\-]*", "mediaId"="[0-9]+"})
+    *   defaults={"trickSlug" = null, "action" = "add", "mediaId" = 0},
+    *   requirements={"trickSlug"="[a-z0-9\-]*", "action"="^(add|edit|delete|confirm_deletion)", "mediaId"="[0-9]+"})
     */
-   public function editMedia($trickSlug, $mediaId, Request $request, ObjectManager $manager, SessionInterface $session, PictureHandler $pictureHandler, VideoHandler $videoHandler)
+   public function editMedia(
+       $trickSlug,
+       $action,
+       $mediaId,
+       Request $request,
+       ObjectManager $manager,
+       SessionInterface $session,
+       PictureHandler $pictureHandler,
+       VideoHandler $videoHandler
+    )
    {
        
+        // deny access for unauthenticated users
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-
 
         $trick = $this->getDoctrine()
         ->getRepository(Trick::class)
@@ -216,11 +225,6 @@ class TrickController extends AbstractController
         if(!$trick) {
             throw $this->createNotFoundException('Requested trick slug not found');
         }
-
-        // create new media mode
-        if($mediaId === 0) {
-            $media = new Media();
-        } 
         
         // edit media mode
         if($mediaId > 0) {
@@ -232,17 +236,25 @@ class TrickController extends AbstractController
             }
         }
 
+        // create new media mode
+        if($action === "add") {
+            $media = new Media();
+            $media->setTrick($trick);
+        } 
+
         // picture form
         $form = $this->createForm(PictureType::class, $media);
-        $picture = $pictureHandler->handle($request, $form, $media);
+        $picture = $pictureHandler->handle($request, $form, $media, $action);
 
         // video form
         $form = $this->createForm(VideoType::class, $media);
-        $video = $videoHandler->handle($request, $form, $media);
+        $video = $videoHandler->handle($request, $form, $media, $action);
 
         return $this->render('tricks/_edit_media.html.twig', [
             'pictureForm' => $picture->getForm()->createView(),
-            'videoForm' => $video->getForm()->createView()
+            'videoForm' => $video->getForm()->createView(),
+            'trick' => $trick,
+            'media' => $media
         ]);
 
    }

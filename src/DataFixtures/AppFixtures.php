@@ -83,13 +83,8 @@ class AppFixtures extends Fixture
             $headerRand = rand(1,3);
             for ($i = 1; $i <= 3; $i++) {
                 $media = new Media();
-                $media->setUrl('trick_media_' . ($mediaStart + $i) . '.jpg');
+                $media->setUrl('trick_media_' . rand(1,6) . '.jpg');
                 $media->setTrick($this->getReference('trick-' . $iTrick));
-                if($i === $headerRand) {
-                    $media->setHeader(true);
-                } else {
-                    $media->setHeader(false);
-                }                
                 $manager->persist($media);
                 if($mediaStart == 6) {
                     $mediaStart = 0;
@@ -101,7 +96,6 @@ class AppFixtures extends Fixture
                 $media = new Media();
                 $media->setUrl('https://www.youtube.com/embed/hPuVJkw1MmI');
                 $media->setTrick($this->getReference('trick-' . $iTrick));
-                $media->setHeader(false);
                 $manager->persist($media);
             }
 

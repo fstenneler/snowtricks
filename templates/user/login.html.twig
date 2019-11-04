@@ -6,9 +6,9 @@
     
     <div class="user-page">
 
-        <section class="ftco-section">
+        <section class="ftco-section user-page-section">
 
-            <div class="container bg-light">
+            <div class="container bg-light user-page-box">
 
                 <div class="row d-flex heading">
                     <div class="col ftco-animate text-center">
@@ -26,7 +26,7 @@
                         <form method="post">
 
                             {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>
                             {% endif %}
                             
                             <div class="form-group">
@@ -44,7 +44,8 @@
                             <button class="btn btn-lg btn-primary py-3 px-4" type="submit">Login</button>
 
                         </form>
-
+                        
+                        <a class="account-link" href="{{ path('app_register') }}">Register</a>
                         <a class="account-link" href="{{ path('app_forgotten_password') }}">Forgot password ?</a>
 
 

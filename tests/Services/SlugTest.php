@@ -2,7 +2,7 @@
 
 namespace App\Tests;
 
-use App\Util\Slug;
+use App\Services\Slug;
 use PHPUnit\Framework\TestCase;
 
 class SlugTest extends TestCase

@@ -60,11 +60,11 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testGetResetToken()
+    public function testGetToken()
     {
         $user = new User();
-        $user->setResetToken('resettokentestvalue');
-        $this->assertSame('resettokentestvalue', $user->getResetToken());
+        $user->setToken('akBck4rwHvJ-WjbvO_d_3ekDbNfSuUL7eD4csdUI0ng');
+        $this->assertSame('akBck4rwHvJ-WjbvO_d_3ekDbNfSuUL7eD4csdUI0ng', $user->getToken());
     }
 
     /**
@@ -77,6 +77,17 @@ class UserTest extends TestCase
         $user = new User();
         $user->setAvatar('person_1.jpg');
         $this->assertSame('person_1.jpg', $user->getAvatar());
+    }
+
+    /**
+     * Unit test for User entity
+     *
+     * @return void
+     */
+    public function testGetAvatarUploadDir()
+    {
+        $user = new User();
+        $this->assertSame('/avatars', $user->getAvatarUploadDir());
     }
 
 }

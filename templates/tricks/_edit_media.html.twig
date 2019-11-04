@@ -1,0 +1,65 @@
+<!-- media edit form start -->
+<div id="media-form-content" class="form-group">
+
+    <div class="title">MEDIA</div>
+    <div class="subtitle">Choose a picture or paste a video url</div>
+
+    <div class="form-group radio">
+        <input type="radio" id="js-radio-picture" class="media-type" name="mediaType" value="picture" checked><span>Picture</span>
+        <input type="radio" id="js-radio-video" class="media-type" name="mediaType" value="video"><span>Video</span>
+    </div>
+
+    <div class="min-height">
+
+        <div class="picture">
+            {{ form_start(pictureForm) }}
+
+            {% for message in app.flashes('picture-error') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('picture-success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_row(pictureForm.url) }}
+            <div class="note">Supported formats : JPEG, PNG, GIF</div>
+
+            <button type="submit" id="change-avatar-submit" class="btn py-3 px-4 btn-primary" data-valid="{% if pictureForm.vars.valid %}true{% endif %}" data-submitted="{% if pictureForm.vars.submitted %}true{% endif %}">Send</button>
+
+            {{ form_end(pictureForm) }}
+            
+        </div>
+
+        <div class="video">
+            {{ form_start(videoForm) }}
+
+            {% for message in app.flashes('video-error') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('video-success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_row(videoForm.url, { 'attr': { 'placeholder': '<iframe>...</iframe' }}) }}
+            <div class="note">Supported : Youtube, DailyMotion, Vimeo</div>
+
+            <button type="submit" id="change-avatar-submit" class="btn py-3 px-4 btn-primary" data-valid="{% if pictureForm.vars.valid %}true{% endif %}" data-submitted="{% if pictureForm.vars.submitted %}true{% endif %}">Send</button>
+
+            {{ form_end(videoForm) }}
+        </div>
+
+    </div>
+    
+</div>
+
+<!-- media edit form end -->

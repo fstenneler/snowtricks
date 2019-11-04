@@ -331,6 +331,47 @@
 	});
 
 	$('.appointment_time').timepicker();
+	
+
+	/* -- auto adjust user page height */
+
+	function adjustUserPageHeight() {
+		var boxTop = ($(window).height() - $(".user-page-box").height()) / 2;
+		$(".user-page").height($(window).height());
+		$(".user-page").css("padding-top", 0);
+		$(".user-page-section").css("padding-top", 0);
+		$(".user-page-section").css("top", boxTop);
+	}
+
+	$(window).resize(function() {
+		adjustUserPageHeight();
+	});
+	adjustUserPageHeight();
+
+	/* auto adjust user page height -- */
+
+
+	/* -- change avatar control */
+
+	function displayAvatarWindow() {
+		var html = $("#change-avatar-content").html();
+		$("body").prepend("<div id='change-avatar-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='change-avatar'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+		$("#change-avatar-window").fadeIn("fast");
+		$("#change-avatar-window .close-zoom").click(function() {
+			$("#change-avatar-window").fadeOut("fast");
+			$("#change-avatar-window").remove();
+		});
+	}
+
+	$("#js-change-avatar").click(function() {
+		displayAvatarWindow();
+	})
+
+	if($("#change-avatar-submit").data("submitted") == true && $("#change-avatar-submit").data("valid") == "") {
+		displayAvatarWindow();
+	}
+
+	/* change avatar control -- */
 
 
 	/* -- go top button */
@@ -635,32 +676,115 @@
 	/* media thumbnail control -- */
 
 
-	/* -- media edit control */
+	/* -- Ajax media form functions */	
 
+	// click on media edit pen load the form in new popin
 	$("#media-list .edit").click(function() {
 		
-		var html = $("#media-form-content").html();
-		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+		var url = $(this).data("url");
+
+		$.ajax({
+			method: "GET",
+			url: url,
+			success: function(html){
+				if(html != "") {
+					displayMediaFormPopin(html);
+					bindMediaFormRadioClick();
+					bindMediaFormSubmit(url);
+				}
+			}
+		});			
+
+	});	
+
+	// popin creation function
+	function displayMediaFormPopin(html) {
+
+		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div><div id='js-form-result'>" + html + "</div></div></div></div>");
 		$("#media-edit-window").fadeIn("fast");
 		$("#media-edit-window .close-zoom").click(function() {
 			$("#media-edit-window").fadeOut("fast");
 			$("#media-edit-window").remove();
 		});
 
+	}
+
+	// bind the change form radio click
+	function bindMediaFormRadioClick() {
+
 		$("input[type=radio][name=mediaType]").change(function() {
-			if($(this).val() == 'picture') {
-				$(".media-form .video").hide();
-				$(".media-form .picture").fadeIn("fast");
-			} else if($(this).val() == 'video') {
-				$(".media-form .picture").hide();
-				$(".media-form .video").fadeIn("fast");
-				$(".media-form .video input").focus();
-			}
+			switchMediaForm($(this).val());
 		});
 
-	});
+	}
 
-	/* media edit control -- */
+	// switch media form picture or video
+	function switchMediaForm(formName) {
+
+		if(formName == 'picture') {
+			$(".media-form .video").hide();
+			$(".media-form .picture").fadeIn("fast");
+		} else if(formName == 'video') {
+			$(".media-form .picture").hide();
+			$(".media-form .video").fadeIn("fast");
+			$(".media-form .video input").focus();
+		}
+		$("#js-radio-" + formName).prop("checked", true);
+
+	}
+
+	// bind the form submit
+	function bindMediaFormSubmit(url) {
+
+		$("form[name='picture']").submit(function(e) {
+			var formData = new FormData(this);
+			mediaFormSubmit(formData, url, "picture");
+			e.preventDefault(); // prevent normal submit
+		});
+		$("form[name='video']").submit(function(e) {
+			var formData = new FormData(this);
+			mediaFormSubmit(formData, url, "video");			
+			e.preventDefault(); // prevent normal submit
+		});
+
+	}
+
+	// ajax form submit function
+	function mediaFormSubmit(formData, url, formName) {		
+	
+		// process the form
+		$.ajax({
+			url: url,
+			type: 'POST',
+			data: formData,
+			success: function (data) {
+				$("#js-form-result").html(data);
+				switchMediaForm(formName);
+				bindMediaFormRadioClick();
+				bindMediaFormSubmit(url);
+				loadMediaList();
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+	
+	}
+
+	// ajax reload trick media list
+	function loadMediaList() {
+		$.ajax({
+			method: "GET",
+			url: '/tricks/trick-9/media-list-edit',
+			success: function(html){
+				if(html != "") {
+					$("#js-media-list-container").html(html);
+				}
+			}
+		});			
+	}
+	
+	/* Ajax media form functions -- */
 
 
 })(jQuery);

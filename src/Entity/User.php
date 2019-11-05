@@ -68,7 +68,6 @@ class User implements UserInterface
      */
     private $activated = false;
 
-    private $resetToken;
     private $Avatar;
     private $slug;
 

@@ -27,10 +27,6 @@ class AppExtension extends AbstractExtension
         if($this->video->isvideo($url)) {
             return $this->video->createIframe($url);
         }
-        /*if(preg_match("#youtu#", $url)) {
-            $url = preg_replace("#https://youtu.be/#", "http://www.youtube.com/embed/", $url);
-            return '<iframe class="media" src="' . $url . '" data-media="' . $url . '" data-type="youtube" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-        }*/
         return '<div class="media" data-media="' . htmlspecialchars($mediaFolder) . '/' . $url . '" data-type="image" style="background-image: url(' . htmlspecialchars($mediaFolder) . '/' . htmlspecialchars($url) .');"></div>';        
     }
 }

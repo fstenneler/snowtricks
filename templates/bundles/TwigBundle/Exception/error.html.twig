@@ -1,5 +1,5 @@
 {#
-    This template is used to render any error different from 403, 404 and 500.
+    This template is used to render errors of type HTTP 404 (Not Found)
 
     This is the simplest way to customize error pages in Symfony applications.
     In case you need it, you can also hook into the internal exception handling
@@ -8,23 +8,40 @@
     See https://symfony.com/doc/current/cookbook/controller/error_pages.html
 #}
 
-{% extends 'base.html.twig' %}
+{% extends '/layout.html.twig' %}
 
-{% block body_id 'error' %}
+{% block title %}SnowTricks - Browse the list of tricks{% endblock %}
 
-{% block main %}
-    <h1 class="text-danger">{{ 'http_error.name'|trans({ '%status_code%': status_code }) }}</h1>aaaaaaaaaa
+{% block content %}
+    <div class="user-page">
 
-    <p class="lead">
-        {{ 'http_error.description'|trans({ '%status_code%': status_code }) }}
-    </p>
-    <p>
-        {{ 'http_error.suggestion'|trans({ '%url%': path('blog_index') })|raw }}
-    </p>
-{% endblock %}
+        <section class="ftco-section user-page-section">
 
-{% block sidebar %}
-    {{ parent() }}
+            <div class="container bg-light user-page-box">
 
-    {{ show_source_code(_self) }}
+                <div class="row d-flex heading">
+                    <div class="col ftco-animate text-center">
+                        <h1>{{ 'http_error.name'|trans({ '%status_code%': status_code }) }}</h1>
+                        <h2 class="subheading">Forbidden</h2>
+                    </div>
+                </div>
+
+                <div class="row d-flex form">
+
+                    <div class="col ftco-animate text-center">
+
+                        <p>
+                            {{ 'http_error.description'|trans({ '%status_code%': status_code }) }}<br /><a href="{{ path('home') }}">Return to the homepage</a>.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
 {% endblock %}

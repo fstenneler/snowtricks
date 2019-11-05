@@ -5,18 +5,15 @@ namespace App\Controller;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Entity\Comment;
-use App\Form\Type\MediaType;
-use App\Form\Type\TrickType;
 use App\Entity\Category;
-<<<<<<< HEAD
+use App\Form\Type\CommentType;
 use App\Form\Type\TrickType;
 use App\Form\Type\VideoType;
 use App\Form\Type\PictureType;
 use App\Form\Handler\TrickHandler;
 use App\Form\Handler\VideoHandler;
+use App\Form\Handler\CommentHandler;
 use App\Form\Handler\PictureHandler;
-=======
->>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,10 +41,7 @@ class TrickController extends AbstractController
     }
     
     /**
-<<<<<<< HEAD
      * tricks page
-=======
->>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
     * @Route("/category/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"}, requirements={"categorySlug"="[a-z0-9\-]*"})
     */
    public function tricks($categorySlug)
@@ -101,30 +95,8 @@ class TrickController extends AbstractController
             'trick_list' => $trick
         ]);
      }
- 
-    /**
-     * ajax load comments
-     * @Route(
-     *      "/load-comments/{trickId}/{firstResult}",
-     *      name="load_comments",
-     *      methods={"GET"},
-     *      requirements={"trickId" = "\d+", "firstResult" = "\d+"},
-     *      defaults={"trickId" = 0, "firstResult" = 1}
-     * )
-     */
-    public function loadComments($trickId, $firstResult)
-    {
-       $comment = $this->getDoctrine()
-           ->getRepository(Comment::class)
-           ->findComments($trickId, $firstResult);
 
-       return $this->render('tricks/_comment.html.twig', [
-           'comment_list' => $comment
-       ]);
-    }
-   
     /**
-<<<<<<< HEAD
      * ajax load media list
     * @Route("/tricks/{trickSlug}/media-list-edit", name="media_list_edit", methods={"GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
@@ -159,7 +131,6 @@ class TrickController extends AbstractController
        $mediaId,
        Request $request,
        ObjectManager $manager,
-       SessionInterface $session,
        PictureHandler $pictureHandler,
        VideoHandler $videoHandler
     )
@@ -212,8 +183,6 @@ class TrickController extends AbstractController
    
     /**
      * single trick page
-=======
->>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
     * @Route("/tricks/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
    public function singleTrick($trickSlug)
@@ -234,7 +203,6 @@ class TrickController extends AbstractController
    }
    
     /**
-<<<<<<< HEAD
      * edit trick page
     * @Route(
     *   "/tricks/{action}/{trickSlug}",
@@ -247,127 +215,6 @@ class TrickController extends AbstractController
    {
         // deny access for unauthenticated users
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-=======
-    * @Route("/tricks/{trickSlug}/edit", name="edit_trick", methods={"POST","GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
-    */
-   public function editTrick($trickSlug, Request $request, ObjectManager $manager)
-   {
-
-        $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findOneBy(['slug' => $trickSlug]);
-
-        if(!$trick) {
-            throw $this->createNotFoundException('Requested trick slug not found');
-        }
-
-        // create form with RegistrationType class
-        $form = $this->createForm(TrickType::class, $trick);
-
-        // handle requested data
-        $form->handleRequest($request);
-
-        // if form is submitted and valid, store data, log the user and redirect to the account route
-        if($form->isSubmitted() && $form->isValid()) {
-
-            // store data into database
-            $manager->persist($trick);
-            $manager->flush();
-            
-            // store a flash message into session
-            $this->addFlash('success', 'The trick has been updated successfully');
-
-            //redirect to edit_trick route
-            return $this->redirectToRoute('edit_trick', ['trickSlug' => $trickSlug]);
-
-        }
-
-        return $this->render('tricks/single.html.twig', [
-            'trick' => $trick,
-            'form' => $form->createView()
-        ]);
-
-   }
-   
-    /**
-    * @Route("/tricks/{trickSlug}/delete", name="delete_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
-    */
-   public function deleteTrick($trickSlug)
-   {
-
-        $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findOneBy(['slug' => $trickSlug]);
-
-        if(!$trick) {
-            throw $this->createNotFoundException('Requested trick slug not found');
-        }
-
-        return $this->render('tricks/single.html.twig', [
-            'trick' => $trick
-        ]);
-
-   }
-      
-    /**
-     * @Route(
-     *  "/tricks/{trickSlug}/edit-media/{mediaId}",
-     *      name="edit_media",
-     *      methods={"POST"},
-     *      defaults={"trickSlug" = null, "mediaId" = 0},
-     *      requirements={"trickSlug"="[a-z0-9\-]*", "mediaId"="\d+"}
-     * )
-     */
-   public function editMedia($mediaId, Request $request, ObjectManager $manager)
-   {
-
-        $media = $this->getDoctrine()
-            ->getRepository(Media::class)
-            ->find($mediaId);
-
-        if(!$media) {
-            throw $this->createNotFoundException('Requested media not found');
-        }
-
-        $form = $this->createForm(MediaType::class, $media);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-
-            /*$brochureFile = $form['brochure']->getData();
-
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($brochureFile) {
-                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $brochureFile->move(
-                        $this->getParameter('brochures_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
-                $product->setBrochureFilename($newFilename);
-            }
-
-            // ... persist the $product variable or any other work*/
-
-            $manager->persist($media);
-            $manager->flush();
-            return $this->redirectToRoute('edit_trick', ['trickSlug' => $trickSlug]);
-        }
-
-   }
->>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
 
         $trick = $this->getDoctrine()
         ->getRepository(Trick::class)
@@ -402,4 +249,57 @@ class TrickController extends AbstractController
         ]);
 
    }
- }
+ 
+    /**
+     * ajax load comments
+     * @Route(
+     *      "/load-comments/{trickId}/{firstResult}",
+     *      name="load_comments",
+     *      methods={"GET"},
+     *      requirements={"trickId" = "\d+", "firstResult" = "\d+"},
+     *      defaults={"trickId" = 0, "firstResult" = 1}
+     * )
+     */
+    public function loadComments($trickId, $firstResult)
+    {
+       $comment = $this->getDoctrine()
+           ->getRepository(Comment::class)
+           ->findComments($trickId, $firstResult);
+
+       return $this->render('tricks/_comment.html.twig', [
+           'comment_list' => $comment
+       ]);
+    }   
+  
+    /**
+     * ajax add comment
+    * @Route("/tricks/{trickSlug}/add-comment", name="add_comment", methods={"POST","GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
+    */
+    public function addComment($trickSlug, Request $request, ObjectManager $manager, CommentHandler $commentHandler)
+    {
+    
+        // deny access for unauthenticated users
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $trick = $this->getDoctrine()
+        ->getRepository(Trick::class)
+        ->findOneBy(['slug' => $trickSlug]);
+
+        if(!$trick) {
+            throw $this->createNotFoundException('Requested trick slug not found');
+        }
+
+        $comment = new Comment();
+        $comment->setTrick($trick);
+        $comment->setUser($this->getUser());
+
+        $form = $this->createForm(CommentType::class, $comment);
+        $handler = $commentHandler->handle($request, $form, $comment);
+
+        return $this->render('tricks/_add_comment.html.twig', [
+            'form' => $handler->getForm()->createView()
+        ]);
+
+    }
+
+}

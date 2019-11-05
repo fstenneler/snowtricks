@@ -160,10 +160,6 @@
 	});
 
 
-	$('#dropdown04').on('show.bs.dropdown', function () {
-	  console.log('show');
-	});
-
 	// scroll
 	var scrollWindow = function() {
 		$(window).scroll(function(){
@@ -215,7 +211,6 @@
 				$('.number').each(function(){
 					var $this = $(this),
 						num = $this.data('number');
-						console.log(num);
 					$this.animateNumber(
 					  {
 					    number: num,
@@ -286,9 +281,6 @@
 		  	navToggler.click();
 		  }
 		});
-		$('body').on('activate.bs.scrollspy', function () {
-		  console.log('nice');
-		})
 	};
 	OnePageNav();
 
@@ -424,7 +416,7 @@
 
 	/* -- Ajax load results functions */	
 
-	function loadResults(requestParameters, divId, reset = false)
+	function loadResults(requestParameters, divId, reset = false, action = 'load')
 	{
 
 		// load default parameters and replace by request parameters
@@ -445,7 +437,6 @@
 			var url = "/load-comments/" + parameters["trick"] + "/" + parameters["newFirstResult"];
 		}
 
-		console.log(url);
 		$.ajax({
 			method: "GET",
 			url: url,
@@ -454,6 +445,9 @@
 					replaceData(data, parameters, divId);			
 				} else if(data != "") {
 					appendData(data, parameters, divId);
+				}
+				if(action == "add") {
+					addResultEffect(divId);
 				}
 			}
 		});
@@ -515,6 +509,14 @@
 
 		});
 
+	}
+
+	function addResultEffect(divId) {
+		$("#" + divId + " li").first().hide();
+		$("#" + divId + " li").first().css("background-color", "#C5E8CD");
+		$("#" + divId + " li").first().fadeIn(2000, function() {
+			$("#" + divId + " li").first().css("background-color", "#ffffff");
+		});
 	}
 
 	/* Ajax load results functions -- */
@@ -931,6 +933,66 @@
 	/* media edit control -- */
 
 >>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
+
+
+
+	/* -- Ajax comment form functions */
+
+	
+	// load ajax comment form
+	function loadCommentForm(url) {
+
+		$.ajax({
+			method: "GET",
+			url: url,
+			success: function(html){
+				if(html != "") {
+					$("#js-comment-form-container").html(html);
+					bindCommentFormSubmit(url);					
+				}
+			}
+		});	
+
+	}
+	if(document.getElementById("js-comment-form-container")) {
+		loadCommentForm($("#js-comment-form-container").data("url"));
+	}
+
+	// bind the form submit
+	function bindCommentFormSubmit(url) {
+
+		$("form[name='comment']").submit(function(e) {
+			var formData = new FormData(this);
+			commentFormSubmit(formData, url);
+			e.preventDefault(); // prevent normal submit
+		});
+
+	}
+
+	// ajax form submit function
+	function commentFormSubmit(formData, url) {		
+	
+		// process the form
+		$.ajax({
+			url: url,
+			type: 'POST',
+			data: formData,
+			success: function (html) {
+				$("#js-comment-form-container").html(html);;
+				bindCommentFormSubmit(url);
+				loadCommentForm($("#js-comment-form-container").data("url"));
+				loadResults({ "newFirstResult" : 0 }, "js-comment-list", true, 'add');
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+	
+	}
+
+
+
+ 	/* Ajax comment form functions -- */
 
 })(jQuery);
 

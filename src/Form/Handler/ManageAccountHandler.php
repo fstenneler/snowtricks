@@ -5,7 +5,6 @@ namespace App\Form\Handler;
 use App\Entity\User;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
-use App\Security\LoginFormAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -19,21 +18,18 @@ class ManageAccountHandler
     private $session;
     private $manager;
     private $passwordEncoder;
-    private $loginFormAuth;
     private $csrfTokenManager;
 
     public function __construct(
         SessionInterface $session,
         ObjectManager $manager,
         UserPasswordEncoderInterface $passwordEncoder,
-        LoginFormAuthenticator $loginFormAuth,
         CsrfTokenManagerInterface $csrfTokenManager
     )
     {
         $this->session = $session;
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
-        $this->loginFormAuth = $loginFormAuth;
         $this->csrfTokenManager = $csrfTokenManager;
     }
         

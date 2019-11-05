@@ -712,9 +712,10 @@ body {
 
 .add-media {
   color: #BFBFBF;
-  text-align: center;
+  text-align: left;
   font-size: 4em;
   padding-top: 0.3em;
+  padding-left: 0.3em;
   cursor: pointer;
 }
 
@@ -797,6 +798,15 @@ body {
   .single-tricks-page .tricks-list .content .comments-section .comment-list {
     padding: 1em 0 1.5em 0 !important;
   }
+}
+
+.single-tricks-page .tricks-list .content .comments-section .comment-list li {
+  padding: 1em;
+  margin: 0 !important;
+  -webkit-transition: background-color 1s;
+  -moz-transition: background-color 1s;
+  -o-transition: background-color 1s;
+  transition: background-color 1s;
 }
 
 .single-tricks-page .tricks-list .content .load-more-comment {

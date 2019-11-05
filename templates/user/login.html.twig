@@ -1,0 +1,63 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}SnowTricks - Sign in{% endblock %}
+
+{% block content %}
+    
+    <div class="user-page">
+
+        <section class="ftco-section user-page-section">
+
+            <div class="container bg-light user-page-box">
+
+                <div class="row d-flex heading">
+                    <div class="col ftco-animate text-center">
+                        <h1>
+                            <a href="{{ path('app_login')}}">Login</a>
+                        </h1>
+                        <h2 class="subheading">Log into your account</h2>
+                    </div>
+                </div>
+
+                <div class="row d-flex form">
+
+                    <div class="col ftco-animate text-center">
+
+                        <form method="post">
+
+                            {% if error %}
+                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>
+                            {% endif %}
+                            
+                            <div class="form-group">
+                                <label for="inputUserName">User name</label>
+                                <input type="text" value="{{ last_username }}" name="userName" id="inputUserName" class="form-control" placeholder="Enter your user name" required autofocus>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputPassword">Password</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Enter your password" required>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <button class="btn btn-lg btn-primary py-3 px-4" type="submit">Login</button>
+
+                        </form>
+                        
+                        <a class="account-link" href="{{ path('app_register') }}">Register</a>
+                        <a class="account-link" href="{{ path('app_forgotten_password') }}">Forgot password ?</a>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+{% endblock %}

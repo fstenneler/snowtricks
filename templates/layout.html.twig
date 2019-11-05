@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% block header %}
+
+        <div class="py-1 bg-black top body-alert">
+            <div class="container">
+                {% for message in app.flashes('body-error') %}
+                    <div class="alert-danger no-gutters align-items-center px-md-0 text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('body-success') %}
+                    <div class="alert-success no-gutters align-items-center px-md-0 text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+            <div class="container">
+
+                <a class="navbar-brand" href="{{ path("home") }}"><span>snow<b>TRICKS</b></span></a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="oi oi-menu"></span> Menu
+                </button>
+
+                <div class="collapse navbar-collapse" id="ftco-nav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active"><a href="{{ path("home") }}" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="{{ path("tricks") }}" class="nav-link">Tricks</a></li>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="nav-item"><a href="{{ path("manage_account") }}" class="nav-link">{{ app.user.userName }}</a></li>
+                            <li class="nav-item"><a href="{{ path("app_logout") }}" class="nav-link">Logout</a></li>
+                        {% else %}
+                            <li class="nav-item"><a href="{{ path("app_login") }}" class="nav-link">Sign in</a></li>
+                            <li class="nav-item"><a href="{{ path("app_register") }}" class="nav-link">Sign up</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <a href="{{ path("home") }}" class="oi oi-home mobile-icon"></a>
+                <a href="" class="oi oi-bookmark mobile-icon"></a>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a href="{{ path("app_login") }}" class="oi oi-account-login mobile-icon"></a>
+                {% else %}
+                    <a href="{{ path("app_logout") }}" class="oi oi-account-logout mobile-icon"></a>
+                {% endif %}
+
+            </div>
+        </nav>
+        <!-- END nav -->
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+        <footer class="ftco-footer ftco-section img">
+            <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12 text-left">
+
+                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            </div>
+            </div>
+        </div>
+        </footer>
+    {% endblock %}
+    <button id="go-top" title="Go to top"></button>
+
+{% endblock %}

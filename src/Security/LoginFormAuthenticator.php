@@ -163,5 +163,15 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         return $this->urlGenerator->generate('app_login');
     }
+<<<<<<< HEAD
+=======
+
+    public function logUser($user)
+    {
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->container->get('security.token_storage')->setToken($token);
+        $this->container->get('session')->set('_security_main', serialize($token));
+    }
+>>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
     
 }

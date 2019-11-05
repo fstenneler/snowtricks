@@ -73,6 +73,7 @@ class TrickTest extends TestCase
         $this->assertSame($category, $trick->getCategory());
     }
 
+<<<<<<< HEAD
 
     /**
      * Unit test for setSlug and getSlug
@@ -86,6 +87,8 @@ class TrickTest extends TestCase
         $this->assertSame('test-slug', $trick->getSlug());
     }
 
+=======
+>>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
     /**
      * Unit test for Trick entity
      *

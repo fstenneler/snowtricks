@@ -2,25 +2,22 @@
 
 namespace App\Form\Type;
 
-use App\Entity\User;
+use App\Entity\Media;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-<<<<<<< HEAD
 
-=======
->>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
-class AvatarType extends AbstractType
+class MediaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('avatar', FileType::class, [
-                'label' => 'Avatar picture file',
-                'mapped' => false,
-                'required' => true,
+            ->add('url', FileType::class, [
+                'label' => 'Brochure (PDF file)',
+                'mapped' => true,
+                'required' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -39,7 +36,7 @@ class AvatarType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class
+            'data_class' => Media::class,
         ]);
     }
 }

@@ -690,6 +690,7 @@
 	/* media thumbnail control -- */
 
 
+<<<<<<< HEAD
 	/* -- Ajax media form functions */	
 
 	// popin media form ajax loader
@@ -748,12 +749,21 @@
 	function displayMediaFormPopin(html) {
 
 		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div><div id='js-form-result'>" + html + "</div></div></div></div>");
+=======
+	/* -- media edit control */
+
+	$("#media-list .edit").click(function() {
+		
+		var html = $("#media-form-content").html();
+		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+>>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
 		$("#media-edit-window").fadeIn("fast");
 		$("#media-edit-window .close-zoom").click(function() {
 			$("#media-edit-window").fadeOut("fast");
 			$("#media-edit-window").remove();
 		});
 
+<<<<<<< HEAD
 		bindConfirmMediaDeleteClick();
 		bindCancelMediaDeleteClick();
 		
@@ -904,6 +914,23 @@
 		document.location.href = $(this).data("url");
 	});
 	/* Trick form functions -- */
+=======
+		$("input[type=radio][name=mediaType]").change(function() {
+			if($(this).val() == 'picture') {
+				$(".media-form .video").hide();
+				$(".media-form .picture").fadeIn("fast");
+			} else if($(this).val() == 'video') {
+				$(".media-form .picture").hide();
+				$(".media-form .video").fadeIn("fast");
+				$(".media-form .video input").focus();
+			}
+		});
+
+	});
+
+	/* media edit control -- */
+
+>>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
 
 })(jQuery);
 

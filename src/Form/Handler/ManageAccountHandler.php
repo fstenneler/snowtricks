@@ -97,6 +97,12 @@ class ManageAccountHandler
                 // store data into database
                 $this->manager->persist($user);
                 $this->manager->flush();
+<<<<<<< HEAD
+=======
+                
+                // log user into session
+                $this->loginFormAuth->logUser($user);
+>>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
 
                 $this->session->getFlashBag()->add('success', 'You account has been successfully modified !');
 

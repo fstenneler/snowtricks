@@ -68,9 +68,6 @@ class User implements UserInterface
      */
     private $activated = false;
 
-    private $Avatar;
-    private $slug;
-
 
     public function getId(): ?int
     {

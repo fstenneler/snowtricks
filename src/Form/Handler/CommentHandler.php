@@ -10,17 +10,14 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CommentHandler
 {
-    private $session;
     private $manager;
     private $success = false;
     private $form;
 
     public function __construct(
-        SessionInterface $session,
         ObjectManager $manager
     )
     {
-        $this->session = $session;
         $this->manager = $manager;
     }
         

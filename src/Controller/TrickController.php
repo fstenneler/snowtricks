@@ -306,5 +306,4 @@ class TrickController extends AbstractController
 
 
 }
-
  

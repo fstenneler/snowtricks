@@ -1,0 +1,102 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}SnowTricks - Sign up{% endblock %}
+
+{% block content %}
+    
+    <div class="user-page">
+
+        <section class="ftco-section user-page-section">
+
+            <div class="container bg-light user-page-box">
+
+                <div class="row d-flex heading">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <div class="col-4 ftco-animate text-center avatar-container">
+                            {% if app.user.avatar is not null and avatarForm.vars.submitted == false %}
+                                <img class="avatar" src="{{ app.user.avatarUploadDir }}/{{ app.user.avatar }}" alt="User avatar" />
+                            {% else %}
+                                <img class="avatar" src="/images/member-default.jpg" alt="User avatar" />
+                            {% endif %}
+                            
+                            <span id="js-change-avatar" class="avatar-link">Change avatar</span>
+                        </div>
+                        <div class="col ftco-animate text-left">
+                            <h1><a href="{{ path('manage_account')}}">{{ app.user.userName }}</a></h1>
+                            <h2 class="subheading">Manage your account</h2>
+                        </div>
+                    {% else %}
+                        <div class="col ftco-animate text-center">
+                            <h1><a href="{{ path('manage_account')}}">Registration</a></h1>
+                            <h2 class="subheading">Create a new account</h2>
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- media edit form start -->
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                    <div id="change-avatar-content" class="form-group">
+                        <div class="title">AVATAR</div>
+                        <div class="subtitle">Change your avatar</div>
+                        {{ form_start(avatarForm) }}
+                                
+                            {% for message in app.flashes('avatar-error') %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            {{ form_row(avatarForm.avatar) }}
+                            <div class="note">Supported formats : JPEG, PNG, GIF</div>
+
+                            <button type="submit" id="change-avatar-submit" class="btn py-3 px-4 btn-primary" data-valid="{% if avatarForm.vars.valid %}true{% endif %}"  data-submitted="{% if avatarForm.vars.submitted %}true{% endif %}">Send</button>
+
+                        {{ form_end(avatarForm) }}
+
+                        
+                    </div>
+
+                {% endif %}
+                <!-- media edit form end -->
+
+
+                <div class="row d-flex form">
+                    <div class="col ftco-animate text-center">
+                       {{ form_start(form) }}
+
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                                
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            {{ form_row(form.userName, { 'attr': { 'placeholder': 'Choose a user name' }}) }}
+                            {{ form_row(form.email, { 'attr': { 'placeholder': 'Enter your email address' }}) }}
+                            {{ form_row(form.password, { 'attr': { 'placeholder': 'Choose a password (6 to 20 cars)' }}) }}
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <button type="submit" class="btn py-3 px-4 btn-primary">Update account</button>   
+                                <a class="account-link" href="{{ path('app_logout') }}">Logout</a>                             
+                            {% else %}
+                                <button type="submit" class="btn py-3 px-4 btn-primary">Create an account</button>
+                                <a class="account-link" href="{{ path('app_login') }}">Already an account ?</a>
+                            {% endif %}                            
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+{% endblock %}

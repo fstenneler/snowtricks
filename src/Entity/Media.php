@@ -22,11 +22,6 @@ class Media
     private $url;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isHeader;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="media")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -49,18 +44,6 @@ class Media
         return $this;
     }
 
-    public function isHeader(): ?bool
-    {
-        return $this->isHeader;
-    }
-
-    public function setHeader(bool $isHeader): self
-    {
-        $this->isHeader = $isHeader;
-
-        return $this;
-    }
-
     public function getTrick(): ?Trick
     {
         return $this->trick;
@@ -72,4 +55,15 @@ class Media
 
         return $this;
     }
+
+    public function getAbsoluteUploadPath()
+    {
+        return __DIR__.'/../../public' . $this->getUploadDir();
+    }
+
+    public function getUploadDir()
+    {
+        return '/gallery';
+    }
+
 }

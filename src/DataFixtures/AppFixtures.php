@@ -2,18 +2,39 @@
 
 namespace App\DataFixtures;
 
-use App\Util\Slug;
+use App\Services\Slug;
+use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Entity\Comment;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     public function load(ObjectManager $manager)
     {
+
+        //create 10 users
+        for ($i = 1; $i <= 10; $i++) {
+            $user = new User();
+            $user->setUserName('user' . $i);
+            $user->setEmail('user' . $i . '@orlinstreet.rocks');
+            $user->setPassword($this->passwordEncoder->encodePassword($user,'azerty'));
+            $user->setAvatar('person_' . rand(1,4) . '.jpg');
+            $user->setActivated(true);
+            $manager->persist($user);
+            $this->addReference('user-' . $i, $user);
+        }
 
         // Create 5 categories
         for ($i = 1; $i <= 5; $i++) {
@@ -52,6 +73,7 @@ class AppFixtures extends Fixture
             );
             $trick->setCategory($this->getReference('category-' . rand(1,5)));
             $trick->setSlug(Slug::createSlug('Trick '.$iTrick));
+            $trick->setUser($this->getReference('user-' . rand(1,10)));
             $manager->persist($trick);
             $this->addReference('trick-' . $iTrick, $trick);
 
@@ -102,6 +124,7 @@ class AppFixtures extends Fixture
                     )
                 );
                 $comment->setTrick($this->getReference('trick-' . $iTrick));
+                $comment->setUser($this->getReference('user-' . rand(1,10)));
                 $manager->persist($comment);
             }
 

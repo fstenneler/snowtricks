@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Entity\User;
 use App\Entity\Trick;
 use App\Entity\Category;
 use PHPUnit\Framework\TestCase;
@@ -69,6 +70,19 @@ class TrickTest extends TestCase
         $category = new Category();
         $trick->setCategory($category);
         $this->assertSame($category, $trick->getCategory());
+    }
+
+    /**
+     * Unit test for Trick entity
+     *
+     * @return void
+     */
+    public function testGetUser()
+    {
+        $trick = new Trick();
+        $user = new User();
+        $trick->setUser($user);
+        $this->assertSame($user, $trick->getUser());
     }
 
 }

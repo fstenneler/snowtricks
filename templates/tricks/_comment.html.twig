@@ -1,10 +1,10 @@
 {% for comment in comment_list %}
     <li class="comment">
         <div class="vcard bio">
-            <img src="images/person_2.jpg" alt="Image placeholder">
+            <img src="{{ comment.user.avatarUploadDir }}/{{ comment.user.avatar }}" alt="Image placeholder">
         </div>
         <div class="comment-body">
-            <h3>John Doe</h3>
+            <h3>{{ comment.user.userName }}</h3>
             <div class="meta">{{ comment.creationDate|date("M d, Y \\a\\t g:ia") }}</div>
             <p>{{ comment.message }}</p>
             <p>

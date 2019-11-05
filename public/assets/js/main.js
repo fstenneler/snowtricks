@@ -331,6 +331,47 @@
 	});
 
 	$('.appointment_time').timepicker();
+	
+
+	/* -- auto adjust user page height */
+
+	function adjustUserPageHeight() {
+		var boxTop = ($(window).height() - $(".user-page-box").height()) / 2;
+		$(".user-page").height($(window).height());
+		$(".user-page").css("padding-top", 0);
+		$(".user-page-section").css("padding-top", 0);
+		$(".user-page-section").css("top", boxTop);
+	}
+
+	$(window).resize(function() {
+		adjustUserPageHeight();
+	});
+	adjustUserPageHeight();
+
+	/* auto adjust user page height -- */
+
+
+	/* -- change avatar control */
+
+	function displayAvatarWindow() {
+		var html = $("#change-avatar-content").html();
+		$("body").prepend("<div id='change-avatar-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='change-avatar'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+		$("#change-avatar-window").fadeIn("fast");
+		$("#change-avatar-window .close-zoom").click(function() {
+			$("#change-avatar-window").fadeOut("fast");
+			$("#change-avatar-window").remove();
+		});
+	}
+
+	$("#js-change-avatar").click(function() {
+		displayAvatarWindow();
+	})
+
+	if($("#change-avatar-submit").data("submitted") == true && $("#change-avatar-submit").data("valid") == "") {
+		displayAvatarWindow();
+	}
+
+	/* change avatar control -- */
 
 
 	/* -- go top button */
@@ -598,24 +639,70 @@
 	/* display medias in mobile version -- */
 
 
-	/* -- click on media thumbnail */
+	/* -- media thumbnail control */
+
+	$("#media-list .media-container").mouseenter(function() {
+		$(this).children(".media-hover")
+			.css("display", "flex")
+			.hide()
+			.fadeIn("fast");
+	});
+	
+	$("#media-list .media-container").mouseleave(function() {
+		$(this).children(".media-hover").fadeOut("fast");
+	});
 
 	$("#media-list .media-container").click(function() {
+		
+		if($(this).children(".media").data("type") == "image") {
+			var mediaHtml = "<img class='image' src='" + $(this).children(".media").data("media") + "' alt='' />";
+		} else {
+			var mediaHtml = $(this).html();
+		}
+		$("body").prepend("<div id='media-zoom-window' class='media-window'><div class='close-zoom'>X</div><div class='zoom-media-container'>" + mediaHtml + "</div></div>");
 
-		var media = $(this).html();
-
-		$("#js-main-view-media .media").animate({
-			opacity: 0
-		}, 200, function() {
-			$("#js-main-view-media").html(media);
-			$("#js-main-view-media .media").animate({
-				opacity: 1
-			}, 200);
+		if($(this).children(".media").data("type") != "image") {
+			$("#media-zoom-window .media-hover").remove();
+			$("#media-zoom-window .media").attr("class", "video");
+		}
+		$("#media-zoom-window").fadeIn("fast");
+		$("#media-zoom-window .close-zoom").click(function() {
+			$("#media-zoom-window").fadeOut("fast");
+			$("#media-zoom-window").remove();
 		});
 
 	});
 
-	/* click on media thumbnail -- */
+	/* media thumbnail control -- */
+
+
+	/* -- media edit control */
+
+	$("#media-list .edit").click(function() {
+		
+		var html = $("#media-form-content").html();
+		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div>" + html + "</div></div></div>");
+		$("#media-edit-window").fadeIn("fast");
+		$("#media-edit-window .close-zoom").click(function() {
+			$("#media-edit-window").fadeOut("fast");
+			$("#media-edit-window").remove();
+		});
+
+		$("input[type=radio][name=mediaType]").change(function() {
+			if($(this).val() == 'picture') {
+				$(".media-form .video").hide();
+				$(".media-form .picture").fadeIn("fast");
+			} else if($(this).val() == 'video') {
+				$(".media-form .picture").hide();
+				$(".media-form .video").fadeIn("fast");
+				$(".media-form .video input").focus();
+			}
+		});
+
+	});
+
+	/* media edit control -- */
+
 
 })(jQuery);
 

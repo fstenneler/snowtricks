@@ -10,7 +10,7 @@ class MediaTest extends TestCase
 {
 
     /**
-     * Unit test for Media entity
+     * Unit test for setUrl and setUrl
      *
      * @return void
      */
@@ -22,19 +22,7 @@ class MediaTest extends TestCase
     }
 
     /**
-     * Unit test for Media entity
-     *
-     * @return void
-     */
-     public function testIsHeader()
-    {
-        $media = new Media();
-        $media->setHeader(false);
-        $this->assertSame(false, $media->isHeader());
-    }
-
-    /**
-     * Unit test for Media entity
+     * Unit test for setTrick and getTrick
      *
      * @return void
      */
@@ -44,6 +32,30 @@ class MediaTest extends TestCase
         $trick = new Trick();
         $media->setTrick($trick);
         $this->assertSame($trick, $media->getTrick());
+    }
+
+    /**
+     * Unit test for getAbsoluteUploadPath
+     *
+     * @return void
+     */
+    public function testGetAbsoluteUploadPath()
+    {
+        $absolutePath = __DIR__ . '/../../public/gallery';
+        $absolutePath = preg_replace("#tests#", "src", $absolutePath);
+        $media = new Media();
+        $this->assertSame($absolutePath, $media->getAbsoluteUploadPath());
+    }
+
+    /**
+     * Unit test for getUploadDir
+     *
+     * @return void
+     */
+    public function testGetUploadDir()
+    {
+        $media = new Media();
+        $this->assertSame('/gallery', $media->getUploadDir());
     }
 
 }

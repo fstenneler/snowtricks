@@ -59,6 +59,7 @@ class TrickTest extends TestCase
         $this->assertSame($dateTime, $trick->getModificationDate());
     }
 
+
     /**
      * Unit test for Trick entity
      *
@@ -70,6 +71,19 @@ class TrickTest extends TestCase
         $category = new Category();
         $trick->setCategory($category);
         $this->assertSame($category, $trick->getCategory());
+    }
+
+
+    /**
+     * Unit test for setSlug and getSlug
+     *
+     * @return void
+     */
+    public function testGetSlug()
+    {
+        $trick = new Trick();
+        $trick->setSlug('test-slug');
+        $this->assertSame('test-slug', $trick->getSlug());
     }
 
     /**

@@ -1,0 +1,23 @@
+<div class="comment-form-wrap pt-5 leave-comment">
+
+    {{ form_start(form) }}
+
+    {% for message in app.flashes('video-error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('video-success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ form_row(form.message, { 'label': false }) }}
+
+    <button type="submit" class="btn py-3 px-4 btn-primary">Leave a comment</button>
+
+    {{ form_end(form) }}
+
+</div>

@@ -8,9 +8,11 @@ use App\Entity\Comment;
 use App\Entity\Category;
 use App\Form\Type\TrickType;
 use App\Form\Type\VideoType;
+use App\Form\Type\CommentType;
 use App\Form\Type\PictureType;
 use App\Form\Handler\TrickHandler;
 use App\Form\Handler\VideoHandler;
+use App\Form\Handler\CommentHandler;
 use App\Form\Handler\PictureHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -93,28 +95,7 @@ class TrickController extends AbstractController
             'trick_list' => $trick
         ]);
      }
- 
-    /**
-     * ajax load comments
-     * @Route(
-     *      "/load-comments/{trickId}/{firstResult}",
-     *      name="load_comments",
-     *      methods={"GET"},
-     *      requirements={"trickId" = "\d+", "firstResult" = "\d+"},
-     *      defaults={"trickId" = 0, "firstResult" = 1}
-     * )
-     */
-    public function loadComments($trickId, $firstResult)
-    {
-       $comment = $this->getDoctrine()
-           ->getRepository(Comment::class)
-           ->findComments($trickId, $firstResult);
 
-       return $this->render('tricks/_comment.html.twig', [
-           'comment_list' => $comment
-       ]);
-    }
-   
     /**
      * ajax load media list
     * @Route("/tricks/{trickSlug}/media-list-edit", name="media_list_edit", methods={"GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
@@ -150,7 +131,6 @@ class TrickController extends AbstractController
        $mediaId,
        Request $request,
        ObjectManager $manager,
-       SessionInterface $session,
        PictureHandler $pictureHandler,
        VideoHandler $videoHandler
     )
@@ -269,4 +249,62 @@ class TrickController extends AbstractController
         ]);
 
    }
- }
+ 
+    /**
+     * ajax load comments
+     * @Route(
+     *      "/load-comments/{trickId}/{firstResult}",
+     *      name="load_comments",
+     *      methods={"GET"},
+     *      requirements={"trickId" = "\d+", "firstResult" = "\d+"},
+     *      defaults={"trickId" = 0, "firstResult" = 1}
+     * )
+     */
+    public function loadComments($trickId, $firstResult)
+    {
+       $comment = $this->getDoctrine()
+           ->getRepository(Comment::class)
+           ->findComments($trickId, $firstResult);
+
+       return $this->render('tricks/_comment.html.twig', [
+           'comment_list' => $comment
+       ]);
+    }   
+  
+    /**
+     * ajax add comment
+    * @Route("/tricks/{trickSlug}/add-comment", name="add_comment", methods={"POST","GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
+    */
+    public function addComment($trickSlug, Request $request, ObjectManager $manager, CommentHandler $commentHandler)
+    {
+    
+        // deny access for unauthenticated users
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $trick = $this->getDoctrine()
+        ->getRepository(Trick::class)
+        ->findOneBy(['slug' => $trickSlug]);
+
+        if(!$trick) {
+            throw $this->createNotFoundException('Requested trick slug not found');
+        }
+
+        $comment = new Comment();
+        $comment->setTrick($trick);
+        $comment->setUser($this->getUser());
+
+        $form = $this->createForm(CommentType::class, $comment);
+        $handler = $commentHandler->handle($request, $form, $comment);
+
+        return $this->render('tricks/_add_comment.html.twig', [
+            'form' => $handler->getForm()->createView()
+        ]);
+
+    }
+
+
+
+
+}
+
+ 

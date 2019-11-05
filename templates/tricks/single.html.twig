@@ -70,7 +70,7 @@
 
                         {% for message in app.flashes('trick-error') %}
                           <div class="alert alert-danger">
-                                  {{ message }}
+                              {{ message }}
                           </div>
                         {% endfor %}
 
@@ -94,7 +94,9 @@
                 </section>
                 <!-- trick edit form end -->
 
-              {% else %}
+              {% endif %}
+
+              {% if 'edit' not in app.request.uri and 'add' not in app.request.uri %}
 
                 <!-- description start -->
                 <section class="container bg-light content">
@@ -128,27 +130,16 @@
 
                 <!-- comments start -->
                 <section class="container bg-light content">
+
                   <div class="row">
 
                     <div class="pt-5 mt-5 comments-section">
 
-                      <div class="comment-form-wrap pt-5 leave-comment">
-                        <form action="#" class="bg-light p-4">
-                          <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea name="" id="message" cols="30" rows="3" class="form-control"></textarea>
-                          </div>
-                          <div class="form-group">
-                            <input type="submit" value="Leave a comment" class="btn py-3 px-4 btn-primary">
-                          </div>
-                        </form>                    
-                      </div>
+                      {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <div id="js-comment-form-container" data-url="{{ path('add_comment', {trickSlug: trick.slug}) }}"></div>
+                      {% endif %}
 
-                      <h2 class="mb-5">{{ trick.comments.count }} comments</h3>
-                      <ul class="comment-list">
-                        <div id="js-comment-list">
-                        </div>
-                      </ul>
+                      <ul class="comment-list" id="js-comment-list"></ul>
                       
                     </div>
                   </div>

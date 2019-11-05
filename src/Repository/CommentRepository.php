@@ -31,7 +31,7 @@ class CommentRepository extends ServiceEntityRepository
 
         // do query
         $qb = $this->createQueryBuilder('c')
-            ->orderBy('c.creationDate', 'ASC')
+            ->orderBy('c.creationDate', 'DESC')
             ->where('c.trick = :trick')
             ->setParameter('trick', $trickId)
             ->setFirstResult($firstResult)

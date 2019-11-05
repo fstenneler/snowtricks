@@ -69,7 +69,7 @@ class VideoHandler
             return $this;
         } 
 
-        $form->get('url')->setData('');
+        $this->form->get('url')->setData('');
 
         return $this;
     }

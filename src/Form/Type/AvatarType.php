@@ -8,10 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-<<<<<<< HEAD
 
-=======
->>>>>>> 298483bc2ca9dac2dd5518824e2e3b89ceee8485
 class AvatarType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -9,10 +9,12 @@
                             <a href="{{ path('single_trick', {trickSlug: trick.slug}) }}">{{ trick.name }}</a>
                         </h3>
                     </div>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <div class="trick-links">
-                        <a href="" class="oi oi-pencil"></a>
+                        <a href="{{ path('edit_trick', {trickSlug: trick.slug, action: 'edit'}) }}" class="oi oi-pencil"></a>
                         <a href="" class="oi oi-trash"></a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

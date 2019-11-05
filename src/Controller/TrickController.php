@@ -9,6 +9,7 @@ use App\Entity\Category;
 use App\Form\Type\TrickType;
 use App\Form\Type\VideoType;
 use App\Form\Type\PictureType;
+use App\Form\Handler\TrickHandler;
 use App\Form\Handler\VideoHandler;
 use App\Form\Handler\PictureHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ class TrickController extends AbstractController
 {
 
     /**
+     * homepage
      * @Route("/", name="home", methods={"GET","HEAD"})
      */
     public function index()
@@ -37,6 +39,7 @@ class TrickController extends AbstractController
     }
     
     /**
+     * tricks page
     * @Route("/category/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"}, requirements={"categorySlug"="[a-z0-9\-]*"})
     */
    public function tricks($categorySlug)
@@ -66,6 +69,7 @@ class TrickController extends AbstractController
    }
    
     /**
+     * ajax trick load
      * @Route(
      *      "/load-results/{categorySlug}/{firstResult}/{orderBy}",
      *      name="load_results",
@@ -91,6 +95,7 @@ class TrickController extends AbstractController
      }
  
     /**
+     * ajax load comments
      * @Route(
      *      "/load-comments/{trickId}/{firstResult}",
      *      name="load_comments",
@@ -111,92 +116,28 @@ class TrickController extends AbstractController
     }
    
     /**
-    * @Route("/tricks/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
+     * ajax load media list
+    * @Route("/tricks/{trickSlug}/media-list-edit", name="media_list_edit", methods={"GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
-   public function singleTrick($trickSlug)
+   public function mediaListEdit($trickSlug)
    {
-
+       
         $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findOneBy(['slug' => $trickSlug]);
+        ->getRepository(Trick::class)
+        ->findOneBy(['slug' => $trickSlug]);
 
         if(!$trick) {
             throw $this->createNotFoundException('Requested trick slug not found');
         }
 
-        return $this->render('tricks/single.html.twig', [
+        return $this->render('tricks/_media_list.html.twig', [
             'trick' => $trick
         ]);
 
    }
    
     /**
-    * @Route("/tricks/{trickSlug}/edit", name="edit_trick", methods={"POST","GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
-    */
-   public function editTrick($trickSlug, Request $request, ObjectManager $manager)
-   {
-
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findOneBy(['slug' => $trickSlug]);
-
-        if(!$trick) {
-            throw $this->createNotFoundException('Requested trick slug not found');
-        }
-
-        // create form with RegistrationType class
-        $form = $this->createForm(TrickType::class, $trick);
-
-        // handle requested data
-        $form->handleRequest($request);
-
-        // if form is submitted and valid, store data, log the user and redirect to the account route
-        if($form->isSubmitted() && $form->isValid()) {
-
-            // store data into database
-            $manager->persist($trick);
-            $manager->flush();
-            
-            // store a flash message into session
-            $this->addFlash('success', 'The trick has been updated successfully');
-
-            //redirect to edit_trick route
-            return $this->redirectToRoute('edit_trick', ['trickSlug' => $trickSlug]);
-
-        }
-
-        return $this->render('tricks/single.html.twig', [
-            'trick' => $trick,
-            'form' => $form->createView()
-        ]);
-
-   }
-   
-    /**
-    * @Route("/tricks/{trickSlug}/delete", name="delete_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
-    */
-   public function deleteTrick($trickSlug)
-   {
-
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->findOneBy(['slug' => $trickSlug]);
-
-        if(!$trick) {
-            throw $this->createNotFoundException('Requested trick slug not found');
-        }
-
-        return $this->render('tricks/single.html.twig', [
-            'trick' => $trick
-        ]);
-
-   }
-   
-    /**
+     * ajax edit media
     * @Route(
     *   "/tricks/{trickSlug}/edit-media/{action}/{mediaId}",
     *   name="edit_media", methods={"POST","GET"},
@@ -258,25 +199,74 @@ class TrickController extends AbstractController
         ]);
 
    }
+
    
     /**
-    * @Route("/tricks/{trickSlug}/media-list-edit", name="media_list_edit", methods={"GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
+     * single trick page
+    * @Route("/tricks/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
-   public function mediaListEdit($trickSlug)
+   public function singleTrick($trickSlug)
    {
-       
+
         $trick = $this->getDoctrine()
-        ->getRepository(Trick::class)
-        ->findOneBy(['slug' => $trickSlug]);
+            ->getRepository(Trick::class)
+            ->findOneBy(['slug' => $trickSlug]);
 
         if(!$trick) {
             throw $this->createNotFoundException('Requested trick slug not found');
         }
 
-        return $this->render('tricks/_media_list.html.twig', [
+        return $this->render('tricks/single.html.twig', [
             'trick' => $trick
         ]);
 
    }
+   
+    /**
+     * edit trick page
+    * @Route(
+    *   "/tricks/{action}/{trickSlug}",
+    *   name="edit_trick",
+    *   methods={"POST","GET","HEAD"},
+    *   defaults={"trickSlug" = "aa", "action" = "add"},
+    *   requirements={"trickSlug" = "[a-z0-9\-]*", "action" = "(add|edit|delete|confirm_deletion)"})
+    */
+   public function editTrick($trickSlug, $action, Request $request, ObjectManager $manager, TrickHandler $trickHandler)
+   {
+        // deny access for unauthenticated users
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        $trick = $this->getDoctrine()
+        ->getRepository(Trick::class)
+        ->findOneBy(['slug' => $trickSlug]);
+
+        if(!$trick && $trickSlug !== 'new') {
+            throw $this->createNotFoundException('Requested trick slug not found');
+        }
+
+        // create new trick mode
+        if($action === "add") {
+            $trick = new Trick();
+        } 
+
+        // form
+        $form = $this->createForm(TrickType::class, $trick);
+        $handler = $trickHandler->handle($request, $form, $trick, $this->getUser(), $action);
+
+        // redirection if success
+        if($handler->getSuccess()) {
+            if($action === 'add' || $action === 'edit') {
+                return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => 'edit']);
+            }
+            if($action === 'confirm_deletion') {
+                return $this->redirectToRoute('tricks');
+            }
+        }
+
+        return $this->render('tricks/single.html.twig', [
+            'trick' => $trick,
+            'form' => $handler->getForm()->createView()
+        ]);
+
+   }
  }

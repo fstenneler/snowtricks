@@ -12,7 +12,12 @@
                     <div class="col ftco-animate text-center">
                         <h1><a href="{{ path('tricks')}}">Tricks</a></h1>
                         <h2 class="subheading">Browse the list of tricks</h2>
-                    </div>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <div class="add-trick">
+                            <button type="button" class="btn btn-primary" id="js-add-trick" data-url="{{ path('edit_trick', {trickSlug: 'new', action: 'add'}) }}">Add trick</button>
+                        </div>
+                        {% endif %}
+                    </div>                    
                 </div>
                 <div class="row d-flex tricks-menu">
 

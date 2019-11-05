@@ -572,6 +572,14 @@
 	/* Load tricks -- */
 
 
+	/* -- Add trick */
+	$("#js-add-trick").click(function() {
+		document.location.href = $(this).data("url");
+	})
+	/* Add trick -- */
+
+
+
 	/* -- Load comments */	
 
 	function loadCommentParameters(reset = false)
@@ -850,6 +858,7 @@
 					bindMediaAddClick();
 					bindDisplayMedia();
 					bindWindowResize();
+					contentWayPoint();
 				}
 			}
 		});
@@ -857,6 +866,44 @@
 	
 	/* Ajax media form functions -- */
 
+
+
+	/* -- Trick form functions */
+
+	$(".js-delete-trick").click(function() {
+
+		var html = $("#trick-delete-content").html();
+
+		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div><div id='js-form-result'>" + html + "</div></div></div></div>");
+		$("#media-edit-window").fadeIn("fast");
+		$("#media-edit-window .close-zoom").click(function() {
+			$("#media-edit-window").fadeOut("fast");
+			$("#media-edit-window").remove();
+		});
+
+		$("#delete-trick-cancel").click(function() {
+			$("#media-edit-window").fadeOut("fast");
+			$("#media-edit-window").remove();
+		});
+
+		$("#delete-trick-confirm").click(function() {
+			document.location.href = $(this).data("url");
+		});
+	
+		return false;
+	});
+
+	$("#trick_name").keypress(function(e) {
+		if (e.which == 13) {
+			e.preventDefault();
+			$("#js-save-trick-button").click();
+		 }
+	});
+
+	$("#js-cancel-trick").click(function() {
+		document.location.href = $(this).data("url");
+	});
+	/* Trick form functions -- */
 
 })(jQuery);
 

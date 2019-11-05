@@ -1,7 +1,7 @@
             <!-- main view start -->
             <section class="container bg-light main-view">
               <div class="row no-gutters main-view-media" id="js-main-view-media">
-                  {{ createMediaHtml('/gallery/', trick.mediaHeader)|raw }}
+                  {{ createMediaHtml('/gallery', trick.mediaHeader)|raw }}
               </div>
               <div class="row no-gutters align-items-center justify-content-center main-view-title">
                 <div class="col-md-9 ftco-animate text-center pt-5 mt-md-5">
@@ -9,21 +9,15 @@
                 </div>
               </div>
               {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {% if 'edit' in app.request.uri %}
                 <div class="tools">
-                  <a href="" class="oi oi-pencil"></a>
-                  <a href="" class="oi oi-trash"></a>
+                  <a href="{{ path('edit_trick', {trickSlug: trick.slug, action: 'edit'}) }}" class="oi oi-pencil"></a>
+                  <span class="oi oi-trash js-delete-trick"></span>
                 </div>
-                {% else %}
-                <div class="tools">
-                  <a href="{{ path('edit_trick', {trickSlug: trick.slug}) }}" class="oi oi-pencil"></a>
-                  <a href="{{ path('edit_trick', {trickSlug: trick.slug}) }}" class="oi oi-trash"></a>
-                </div>
-                {% endif %}
               {% endif %}
             </section>
             <!-- main view end -->
 
+            <a name="form"></a>
 
             <!-- media list start -->
             <section class="container bg-light content">

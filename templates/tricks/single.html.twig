@@ -9,10 +9,44 @@
         <div class="ftco-section tricks-list">
 
             <div id='js-media-list-container'>
-              {{ include('tricks/_media_list.html.twig') }}
+              {% if 'add' not in app.request.uri %}
+                {{ include('tricks/_media_list.html.twig') }}
+              {% endif %}
             </div>
 
-            {% if is_granted('IS_AUTHENTICATED_FULLY') and 'edit' in app.request.uri %}
+            <!-- delete confirmation window -->
+            <div id="trick-delete-content" class="form-group">
+
+                <div class="title">DELETE TRICK</div>
+                <div class="subtitle">Delete a trick</div>
+
+                <div class="min-height">
+
+                    {% for message in app.flashes('delete-trick-error') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('delete-trick-success') %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    <p>Are you sure you want to delete this trick ?</p>
+                    <div class="delete-media-control">
+                        <button type="submit" id="delete-trick-confirm" class="btn py-3 px-4 btn-danger" data-url="{{ path('edit_trick', {trickSlug: trick.slug, action: 'confirm_deletion'}) }}">Delete trick</button>
+                        <button type="submit" id="delete-trick-cancel" class="btn py-3 px-4 btn-primary">Cancel</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- delete confirmation window -->
+
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') and ('edit' in app.request.uri or 'add' in app.request.uri) %}
 
                 <!-- trick edit form start -->
                 <section class="container bg-light content">
@@ -21,15 +55,20 @@
 
                     <div class="col ftco-animate text-left edit-trick-form">
 
-                      {{ form_start(form) }}
+                      {% if 'add' in app.request.uri %}
+                        <div class="title">ADD A TRICK</div>
+                        <div class="subtitle">Please fill the requested fields to create the trick.</div>
+                      {% endif %}                     
 
-                        {% for message in app.flashes('success') %}
+                      {{ form_start(form, {'action': '#form'}) }}
+
+                        {% for message in app.flashes('trick-success') %}
                             <div class="alert alert-success">
                               {{ message }}
                           </div>
                         {% endfor %}
 
-                        {% for message in app.flashes('error') %}
+                        {% for message in app.flashes('trick-error') %}
                           <div class="alert alert-danger">
                                   {{ message }}
                           </div>
@@ -38,8 +77,12 @@
                         {{ form_widget(form) }}
                         
                         <div class="col text-right edit-trick-submit">
-                          <button type="submit" class="btn py-3 px-4 btn-danger">Delete</button>
-                          <button type="submit" class="btn py-3 px-4 btn-primary">Save</button>
+                          {% if 'edit' in app.request.uri %}
+                            <button type="submit" class="btn py-3 px-4 btn-danger js-delete-trick">Delete</button>
+                          {% else %}
+                            <button type="button" class="btn py-3 px-4 btn-dark" id="js-cancel-trick" data-url="{{ path('tricks') }}">Cancel</button>
+                          {% endif %}
+                          <button type="submit" class="btn py-3 px-4 btn-primary" id="js-save-trick-button">Save</button>
                         </div>
 
                       {{ form_end(form) }}

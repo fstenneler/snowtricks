@@ -40,7 +40,7 @@ class PictureHandler
         // handle requested data
         $this->form = $form->handleRequest($request);        
 
-        // if form is submitted and valid, store data, log the user and redirect to the account route
+        // if form is submitted and valid
         if($this->form->isSubmitted() && $this->form->isValid()) {
 
             $file = $this->form['url']->getData();

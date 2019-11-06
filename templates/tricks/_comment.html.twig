@@ -1,7 +1,7 @@
 {% for comment in comment_list %}
     <li class="comment">
         <div class="vcard bio">
-            {% if app.user.avatar is not null and avatarForm.vars.submitted == false %}
+            {% if comment.user.avatar is not null %}
                 <img src="{{ comment.user.avatarUploadDir }}/{{ comment.user.avatar }}" alt="User avatar">
             {% else %}
                 <img src="/images/member-default.jpg" alt="User avatar">

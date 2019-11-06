@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Comment
 {
-    const NUM_ITEMS = 3;
+    const NUM_ITEMS = 10;
 
     /**
      * @ORM\Id()

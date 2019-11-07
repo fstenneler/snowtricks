@@ -57,7 +57,7 @@
                     </div>
                 {% endfor %}
 
-                {{ form_row(videoForm.url, { 'attr': { 'placeholder': '<iframe>...</iframe' }}) }}
+                {{ form_row(videoForm.url, { 'attr': { 'placeholder': '<iframe>...</iframe>' }}) }}
                 <div class="note">Supported : Youtube, DailyMotion, Vimeo</div>
 
                 <button type="submit" class="btn py-3 px-4 btn-primary" data-valid="{% if pictureForm.vars.valid %}true{% endif %}" data-submitted="{% if pictureForm.vars.submitted %}true{% endif %}">Send</button>

@@ -69,7 +69,10 @@ class VideoHandler
             return $this;
         } 
 
-        $this->form->get('url')->setData('');
+        // set form field to blank
+        if(!$this->form->isSubmitted()) {
+            $this->form->get('url')->setData('');
+        }
 
         return $this;
     }

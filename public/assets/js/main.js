@@ -442,10 +442,12 @@
 			url: url,
 			success: function(data){
 				if(data != "" && parameters["reset"] == true) {
-					replaceData(data, parameters, divId);			
+					replaceData(data, parameters, divId);
 				} else if(data != "") {
 					appendData(data, parameters, divId);
 				}
+				$("#" + divId).hide();
+				$("#" + divId).fadeIn("slow");
 				if(action == "add") {
 					addResultEffect(divId);
 				}
@@ -865,11 +867,13 @@
 			success: function(html){
 				if(html != "") {
 					$("#js-media-list-container").html(html);
+					$("#js-media-list-container").hide();
 					bindMediaEditClick();
 					bindMediaDeleteClick();
 					bindMediaAddClick();
 					bindDisplayMedia();
 					bindWindowResize();
+					$("#js-media-list-container").fadeIn("slow");
 					contentWayPoint();
 				}
 			}
@@ -931,6 +935,8 @@
 			success: function(html){
 				if(html != "") {
 					$("#js-comment-form-container").html(html);
+					$("#js-comment-form-container").hide();
+					$("#js-comment-form-container").fadeIn("slow");
 					bindCommentFormSubmit(url);					
 				}
 			}

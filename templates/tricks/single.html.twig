@@ -136,10 +136,16 @@
                     <div class="pt-5 mt-5 comments-section">
 
                       {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <div id="js-comment-form-container" data-url="{{ path('add_comment', {trickSlug: trick.slug}) }}"></div>
+                        <div id="js-comment-form-container" data-url="{{ path('add_comment', {trickSlug: trick.slug}) }}">
+                          <div class="comment-form-wrap pt-5 leave-comment">
+                            <div class="ajax-loader show" id="js-comment-form-ajax-loader"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#209CEE"/></svg></div>
+                          </div>                        
+                        </div>
                       {% endif %}
 
-                      <ul class="comment-list" id="js-comment-list"></ul>
+                      <ul class="comment-list" id="js-comment-list">
+                        <div class="ajax-loader show" id="js-comment-form-ajax-loader"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#209CEE"/></svg></div>
+                      </ul>
                       
                     </div>
                   </div>

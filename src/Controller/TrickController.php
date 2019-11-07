@@ -49,7 +49,9 @@ class TrickController extends AbstractController
 
        // 404 route for invalid category slugs
        if($categorySlug !== "all") {
-           $category = $this->getDoctrine()->getRepository(Category::class)->findOneBySlug($categorySlug);
+           $category = $this->getDoctrine()
+                ->getRepository(Category::class)
+                ->findOneBySlug($categorySlug);
            if(!$category) {
                throw $this->createNotFoundException('Requested category slug not found');
            }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
@@ -20,6 +21,7 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotNull
      */
     private $message;
 
@@ -50,7 +52,7 @@ class Comment
         return $this->message;
     }
 
-    public function setMessage(string $message): self
+    public function setMessage(?string $message): self
     {
         $this->message = $message;
 

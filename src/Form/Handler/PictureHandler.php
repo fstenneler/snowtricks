@@ -38,7 +38,13 @@ class PictureHandler
     {   
 
         // handle requested data
-        $this->form = $form->handleRequest($request);        
+        $this->form = $form->handleRequest($request);
+        
+        // return error if the field is blank
+        if($this->form->isSubmitted() && $request->files->get('picture')['url'] === null) {
+            $this->session->getFlashBag()->add('picture-error', 'This value should not be null.');
+            return $this;
+        }
 
         // if form is submitted and valid
         if($this->form->isSubmitted() && $this->form->isValid()) {

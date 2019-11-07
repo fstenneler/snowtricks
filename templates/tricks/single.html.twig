@@ -16,32 +16,15 @@
 
             <!-- delete confirmation window -->
             <div id="trick-delete-content" class="form-group">
-
                 <div class="title">DELETE TRICK</div>
                 <div class="subtitle">Delete a trick</div>
-
                 <div class="min-height">
-
-                    {% for message in app.flashes('delete-trick-error') %}
-                        <div class="alert alert-danger">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-
-                    {% for message in app.flashes('delete-trick-success') %}
-                        <div class="alert alert-success">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-
                     <p>Are you sure you want to delete this trick ?</p>
                     <div class="delete-media-control">
-                        <button type="submit" id="delete-trick-confirm" class="btn py-3 px-4 btn-danger" data-url="{{ path('edit_trick', {trickSlug: trick.slug, action: 'confirm_deletion'}) }}">Delete trick</button>
+                        <button type="submit" id="delete-trick-confirm" class="btn py-3 px-4 btn-danger">Delete trick</button>
                         <button type="submit" id="delete-trick-cancel" class="btn py-3 px-4 btn-primary">Cancel</button>
                     </div>
-
                 </div>
-
             </div>
             <!-- delete confirmation window -->
 

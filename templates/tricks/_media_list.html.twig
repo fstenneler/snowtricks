@@ -11,7 +11,7 @@
               {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <div class="tools">
                   <a href="{{ path('edit_trick', {trickSlug: trick.slug, action: 'edit'}) }}" class="oi oi-pencil"></a>
-                  <span class="oi oi-trash js-delete-trick"></span>
+                  <span class="oi oi-trash js-delete-trick" data-url-confirmation="{{ path('edit_trick', {trickSlug: trick.slug, action: 'confirm_deletion'}) }}"></span>
                 </div>
               {% endif %}
             </section>

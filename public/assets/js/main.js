@@ -889,6 +889,7 @@
 	$(".js-delete-trick").click(function() {
 
 		var html = $("#trick-delete-content").html();
+		var urlConfirmation = $(this).data("url-confirmation");
 
 		$("body").prepend("<div id='media-edit-window' class='media-window' style='background: rgba(0, 0, 0, 0.7);'><div class='zoom-media-container'><div class='media-form'><div class='close-zoom'>X</div><div id='js-form-result'>" + html + "</div></div></div></div>");
 		$("#media-edit-window").fadeIn("fast");
@@ -903,7 +904,7 @@
 		});
 
 		$("#delete-trick-confirm").click(function() {
-			document.location.href = $(this).data("url");
+			document.location.href = urlConfirmation;
 		});
 	
 		return false;

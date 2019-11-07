@@ -24,6 +24,8 @@ class UserController extends AbstractController
 {
 
     /**
+     * Register new user page
+     * 
      * @Route("/register", methods={"GET","POST"}, name="app_register")
      */
     public function register(Request $request, RegisterHandler $registerHandler)
@@ -48,6 +50,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Re-send activation token
+     * 
      * @Route("/resend-activation-token/{userName}", methods={"GET"}, defaults={"userName" = null}, name="app_resend_activation_token")
      */
     public function reSendActivationToken(Request $request, ObjectManager $manager, SendMail $sendMail, GenerateToken $generateToken, $userName)
@@ -86,6 +90,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Activate account
+     * 
      * @Route("/activate-account/{token}", methods={"GET","POST"}, defaults={"token" = null}, name="app_activate_account")
      */
     public function activateAccount(Request $request, ObjectManager $manager, $token)
@@ -112,6 +118,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Manage account page
+     * 
      * @Route("/manage-account", methods={"GET","POST"}, name="manage_account")
      */
     public function manageAccount(Request $request, ManageAccountHandler $manageAccountHandler, ManageAvatarHandler $manageAvatarHandler)
@@ -144,6 +152,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Login page
+     * 
      * @Route("/login", methods={"GET","POST"}, name="app_login")
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils, Session $session): Response
@@ -169,6 +179,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * User logout
+     * 
      * @Route("/logout", methods={"GET"}, name="app_logout")
      */
     public function logout()
@@ -176,6 +188,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Forgotten password page
+     * 
      * @Route("/forgotten-password", methods={"GET","POST"}, name="app_forgotten_password")
      */
     public function forgottenPassword(Request $request, ForgottenPassswordHandler $forgottenPasswordHandler) : Response
@@ -190,6 +204,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Reset password page
+     * 
      * @Route("/reset-password/{token}", methods={"GET","POST"}, defaults={"token" = null}, name="app_reset_password")
      */
     public function resetPassword(Request $request, ResetPassswordHandler $resetpasswordHandler, $token)

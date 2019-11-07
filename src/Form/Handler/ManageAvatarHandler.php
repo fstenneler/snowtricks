@@ -25,7 +25,15 @@ class ManageAvatarHandler
         $this->manager = $manager;
         $this->fileUpload = $fileUpload;
     }
-        
+    
+    /**
+     * Handle manage avatar form
+     *
+     * @param Request $request
+     * @param Form $form
+     * @param User $user
+     * @return array
+     */
     public function handle(Request $request, Form $form, User $user)
     {
 

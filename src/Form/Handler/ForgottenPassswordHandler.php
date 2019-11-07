@@ -32,7 +32,13 @@ class ForgottenPassswordHandler
         $this->sendMail = $sendMail;
         $this->generateToken = $generateToken;
     }
-        
+    
+    /**
+     * Handle forgotten password form
+     *
+     * @param Request $request
+     * @return array
+     */
     public function handle(Request $request)
     {
 

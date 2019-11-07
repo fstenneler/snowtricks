@@ -22,6 +22,13 @@ class AppExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * Create iframe or video Html code in twig templates
+     *
+     * @param string $mediaFolder
+     * @param string $url
+     * @return string
+     */
     public function createMediaHtmlFunction($mediaFolder, $url)
     {
         if($this->video->isvideo($url)) {

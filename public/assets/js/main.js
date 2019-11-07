@@ -361,6 +361,9 @@
 
 	if($("#change-avatar-submit").data("submitted") == true && $("#change-avatar-submit").data("valid") == "") {
 		displayAvatarWindow();
+		if($("#change-avatar-window .invalid-feedback .d-block").length > 1) {
+			$("#change-avatar-window .invalid-feedback .d-block").last().remove();
+		}
 	}
 
 	/* change avatar control -- */

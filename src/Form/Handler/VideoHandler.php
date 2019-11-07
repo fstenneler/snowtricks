@@ -27,7 +27,16 @@ class VideoHandler
         $this->manager = $manager;
         $this->video = $video;
     }
-        
+    
+    /**
+     * Handle video form
+     *
+     * @param Request $request
+     * @param Form $form
+     * @param Media $media
+     * @param string $action Requested action : add, edit, delete
+     * @return self
+     */
     public function handle(Request $request, Form $form, Media $media, $action)
     {   
 
@@ -77,11 +86,21 @@ class VideoHandler
         return $this;
     }
 
+    /**
+     * Get video form
+     *
+     * @return Form
+     */
     public function getForm()
     {
         return $this->form;
     }
 
+    /**
+     * Get handle success
+     *
+     * @return bool
+     */
     public function getSuccess()
     {
         return $this->success;

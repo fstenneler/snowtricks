@@ -20,7 +20,15 @@ class CommentHandler
     {
         $this->manager = $manager;
     }
-        
+    
+    /**
+     * Handle add comment form
+     *
+     * @param Request $request
+     * @param Form $form
+     * @param Comment $comment
+     * @return self
+     */
     public function handle(Request $request, Form $form, Comment $comment)
     {   
 
@@ -44,11 +52,21 @@ class CommentHandler
         return $this;
     }
 
+    /**
+     * Get the comment form
+     *
+     * @return Form
+     */
     public function getForm()
     {
         return $this->form;
     }
 
+    /**
+     * Get form handle success
+     *
+     * @return bool
+     */
     public function getSuccess()
     {
         return $this->success;

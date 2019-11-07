@@ -40,7 +40,7 @@ class RegisterHandler
     }
 
     /**
-     * Handle form request
+     * Handle register form
      *
      * @param Request $request
      * @param Form $form

@@ -25,7 +25,8 @@ class TrickController extends AbstractController
 {
 
     /**
-     * homepage
+     * Home page
+     * 
      * @Route("/", name="home", methods={"GET","HEAD"})
      */
     public function index()
@@ -41,7 +42,8 @@ class TrickController extends AbstractController
     }
     
     /**
-     * tricks page
+     * Tricks page
+     * 
     * @Route("/category/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"}, requirements={"categorySlug"="[a-z0-9\-]*"})
     */
    public function tricks($categorySlug)
@@ -73,7 +75,8 @@ class TrickController extends AbstractController
    }
    
     /**
-     * ajax trick load
+     * Ajax tricks load
+     * 
      * @Route(
      *      "/load-results/{categorySlug}/{firstResult}/{orderBy}",
      *      name="load_results",
@@ -99,7 +102,8 @@ class TrickController extends AbstractController
      }
 
     /**
-     * ajax load media list
+     * Ajax media load
+     * 
     * @Route("/tricks/{trickSlug}/media-list-edit", name="media_list_edit", methods={"GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
    public function mediaListEdit($trickSlug)
@@ -120,7 +124,8 @@ class TrickController extends AbstractController
    }
    
     /**
-     * ajax edit media
+     * Ajax edit media form
+     * 
     * @Route(
     *   "/tricks/{trickSlug}/edit-media/{action}/{mediaId}",
     *   name="edit_media", methods={"POST","GET"},
@@ -184,7 +189,8 @@ class TrickController extends AbstractController
 
    
     /**
-     * single trick page
+     * Single trick page
+     * 
     * @Route("/tricks/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
    public function singleTrick($trickSlug)
@@ -205,7 +211,8 @@ class TrickController extends AbstractController
    }
    
     /**
-     * edit trick page
+     * Edit trick page
+     * 
     * @Route(
     *   "/tricks/{action}/{trickSlug}",
     *   name="edit_trick",
@@ -260,7 +267,8 @@ class TrickController extends AbstractController
    }
  
     /**
-     * ajax load comments
+     * Ajax comments load
+     * 
      * @Route(
      *      "/load-comments/{trickId}/{firstResult}",
      *      name="load_comments",
@@ -281,7 +289,8 @@ class TrickController extends AbstractController
     }   
   
     /**
-     * ajax add comment
+     * Ajax add comment form
+     * 
     * @Route("/tricks/{trickSlug}/add-comment", name="add_comment", methods={"POST","GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
     public function addComment($trickSlug, Request $request, ObjectManager $manager, CommentHandler $commentHandler)

@@ -33,7 +33,16 @@ class PictureHandler
         $this->fileUpload = $fileUpload;
         $this->video = $video;
     }
-        
+    
+    /**
+     * Handle picture form
+     *
+     * @param Request $request
+     * @param Form $form
+     * @param Media $media
+     * @param string $action Requested action : add, edit, delete
+     * @return self
+     */
     public function handle(Request $request, Form $form, Media $media, $action)
     {   
 
@@ -94,11 +103,21 @@ class PictureHandler
         return $this;
     }
 
+    /**
+     * Get picture form
+     *
+     * @return Form
+     */
     public function getForm()
     {
         return $this->form;
     }
 
+    /**
+     * Get form handle success
+     *
+     * @return bool
+     */
     public function getSuccess()
     {
         return $this->success;

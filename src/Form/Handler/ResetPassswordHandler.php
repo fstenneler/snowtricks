@@ -29,7 +29,14 @@ class ResetPassswordHandler
         $this->passwordEncoder = $passwordEncoder;
         $this->em = $em;
     }
-        
+    
+    /**
+     * Handle reset password form
+     *
+     * @param Request $request
+     * @param string $token
+     * @return array
+     */
     public function handle(Request $request, $token)
     {
         // search the user with requested token

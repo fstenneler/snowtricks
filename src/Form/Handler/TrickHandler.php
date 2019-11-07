@@ -30,14 +30,14 @@ class TrickHandler
     }
     
     /**
-     * handle the trick edit form
+     * Handle trick edit form
      *
      * @param Request $request
      * @param Form $form
      * @param Trick $trick
      * @param User $user
      * @param string $action Type of action requested : create, add, edit, delete, confirm_deletion
-     * @return void
+     * @return array
      */
     public function handle(Request $request, Form $form, Trick $trick, User $user, $action)
     {   
@@ -94,11 +94,21 @@ class TrickHandler
         return $this;
     }
 
+    /**
+     * Get trick form
+     *
+     * @return Form
+     */
     public function getForm()
     {
         return $this->form;
     }
 
+    /**
+     * Get handle success
+     *
+     * @return bool
+     */
     public function getSuccess()
     {
         return $this->success;

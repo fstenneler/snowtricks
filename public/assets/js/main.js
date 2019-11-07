@@ -519,7 +519,7 @@
 
 	function addResultEffect(divId) {
 		$("#" + divId + " li").first().hide();
-		$("#" + divId + " li").first().css("background-color", "#ccc");
+		$("#" + divId + " li").first().css("background-color", "#ececec");
 		$("#" + divId + " li").first().fadeIn(2000, function() {
 			$("#" + divId + " li").first().css("background-color", "#ffffff");
 		});
@@ -669,37 +669,43 @@
 
 	/* -- media thumbnail control */
 
-	$("#media-list .media-container").mouseenter(function() {
-		$(this).children(".media-hover")
-			.css("display", "flex")
-			.hide()
-			.fadeIn("fast");
-	});
-	
-	$("#media-list .media-container").mouseleave(function() {
-		$(this).children(".media-hover").fadeOut("fast");
-	});
-
-	$("#media-list .media-container").click(function() {
-		
-		if($(this).children(".media").data("type") == "image") {
-			var mediaHtml = "<img class='image' src='" + $(this).children(".media").data("media") + "' alt='' />";
-		} else {
-			var mediaHtml = $(this).html();
-		}
-		$("body").prepend("<div id='media-zoom-window' class='media-window'><div class='close-zoom'>X</div><div class='zoom-media-container'>" + mediaHtml + "</div></div>");
-
-		if($(this).children(".media").data("type") != "image") {
-			$("#media-zoom-window .media-hover").remove();
-			$("#media-zoom-window .media").attr("class", "video");
-		}
-		$("#media-zoom-window").fadeIn("fast");
-		$("#media-zoom-window .close-zoom").click(function() {
-			$("#media-zoom-window").fadeOut("fast");
-			$("#media-zoom-window").remove();
+	function bindMediaHover() {
+		$("#media-list .media-thumbnail").mouseenter(function() {
+			$(this).children(".media-hover")
+				.css("display", "flex")
+				.hide()
+				.fadeIn("fast");
 		});
+		
+		$("#media-list .media-thumbnail").mouseleave(function() {
+			$(this).children(".media-hover").fadeOut("fast");
+		});
+	}
+	bindMediaHover();
 
-	});
+	function bindMediaClick() {
+		$("#media-list .media-thumbnail").click(function() {
+		
+			if($(this).children(".media").data("type") == "image") {
+				var mediaHtml = "<img class='image' src='" + $(this).children(".media").data("media") + "' alt='' />";
+			} else {
+				var mediaHtml = $(this).html();
+			}
+			$("body").prepend("<div id='media-zoom-window' class='media-window'><div class='close-zoom'>X</div><div class='zoom-media-container'>" + mediaHtml + "</div></div>");
+
+			if($(this).children(".media").data("type") != "image") {
+				$("#media-zoom-window .media-hover").remove();
+				$("#media-zoom-window .media").attr("class", "video");
+			}
+			$("#media-zoom-window").fadeIn("fast");
+			$("#media-zoom-window .close-zoom").click(function() {
+				$("#media-zoom-window").fadeOut("fast");
+				$("#media-zoom-window").remove();
+			});
+
+		});
+	}
+	bindMediaClick();
 
 	/* media thumbnail control -- */
 
@@ -749,7 +755,7 @@
 
 	function bindMediaAddClick() {
 
-		$("#media-list .add").click(function() {		
+		$("#media-list .add").click(function() {
 			var url = $(this).data("url");
 			var mediaListUrl = $("#media-list").data("media-list-url");
 			loadMediaForm(url, mediaListUrl);
@@ -839,9 +845,9 @@
 
 	// ajax form submit function
 	function mediaFormSubmit(formData, url, mediaListUrl, formName) {		
-	
+
 		// process the form
-		$.ajax({
+		$.ajax({ 
 			url: url,
 			type: 'POST',
 			data: formData,
@@ -851,6 +857,9 @@
 				bindMediaFormRadioClick();
 				bindMediaFormSubmit(url, mediaListUrl);
 				loadMediaList(mediaListUrl);
+				if($("#js-form-result .invalid-feedback .d-block").length > 1) {
+					$("#js-form-result .invalid-feedback .d-block").last().remove();
+				}
 			},
 			cache: false,
 			contentType: false,
@@ -873,6 +882,8 @@
 					bindMediaAddClick();
 					bindDisplayMedia();
 					bindWindowResize();
+					bindMediaHover();
+					bindMediaClick();				
 					$("#js-media-list-container").fadeIn("slow");
 					contentWayPoint();
 				}
@@ -920,6 +931,7 @@
 	$("#js-cancel-trick").click(function() {
 		document.location.href = $(this).data("url");
 	});
+	
 	/* Trick form functions -- */
 
 

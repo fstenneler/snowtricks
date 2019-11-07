@@ -19,7 +19,6 @@ class Media
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotNull
      */
     private $url;
 

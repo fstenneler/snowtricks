@@ -8,11 +8,11 @@
 
         <div class="ftco-section tricks-list">
 
+            {% if app.request.get('action') != 'create' %}
             <div id='js-media-list-container'>
-              {% if 'add' not in app.request.uri %}
                 {{ include('tricks/_media_list.html.twig') }}
-              {% endif %}
             </div>
+            {% endif %}
 
             <!-- delete confirmation window -->
             <div id="trick-delete-content" class="form-group">
@@ -29,7 +29,7 @@
             <!-- delete confirmation window -->
 
 
-            {% if is_granted('IS_AUTHENTICATED_FULLY') and ('edit' in app.request.uri or 'add' in app.request.uri) %}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') and (app.request.get('action') == 'create' or app.request.get('action') == 'add' or app.request.get('action') == 'edit') %}
 
                 <!-- trick edit form start -->
                 <section class="container bg-light content">
@@ -38,10 +38,14 @@
 
                     <div class="col ftco-animate text-left edit-trick-form">
 
-                      {% if 'add' in app.request.uri %}
+                      {% if app.request.get('action') == 'create' %}
                         <div class="title">ADD A TRICK</div>
-                        <div class="subtitle">Please fill the requested fields to create the trick.</div>
-                      {% endif %}                     
+                        <div class="subtitle">Step 1 : Please enter a trick name and a category.</div>
+                      {% elseif app.request.get('action') == 'add' %}
+                        <div class="title">ADD A TRICK</div>
+                        <div class="subtitle">Step 2 : Please add medias and a description.</div>
+                      {% endif %}
+
 
                       {{ form_start(form, {'action': '#form'}) }}
 
@@ -57,18 +61,28 @@
                           </div>
                         {% endfor %}
 
-                        {{ form_widget(form) }}
-                        
+                        {{ form_row(form.name) }}
+
+                        {% if app.request.get('action') != 'create' %}
+                          {{ form_row(form.description) }}
+                        {% else %}
+                          {{ form_row(form.description, {'label': false, 'attr': {'class': 'hide'}}) }}
+                        {% endif %}
+
+                        {{ form_row(form.category) }}
+                       
                         <div class="col text-right edit-trick-submit">
-                          {% if 'edit' in app.request.uri %}
-                            <button type="submit" class="btn py-3 px-4 btn-danger js-delete-trick">Delete</button>
+                          {% if app.request.get('action') != 'create' %}
+                            <button type="submit" class="btn py-3 px-4 btn-danger js-delete-trick" data-url-confirmation="{{ path('edit_trick', {trickSlug: trick.slug, action: 'confirm_deletion'}) }}">Delete</button>
+                            <button type="submit" class="btn py-3 px-4 btn-primary" id="js-save-trick-button">Save</button>
                           {% else %}
                             <button type="button" class="btn py-3 px-4 btn-dark" id="js-cancel-trick" data-url="{{ path('tricks') }}">Cancel</button>
+                            <button type="submit" class="btn py-3 px-4 btn-primary" id="js-save-trick-button">Next&nbsp;<i class="fas fa-chevron-right"></i></button>
                           {% endif %}
-                          <button type="submit" class="btn py-3 px-4 btn-primary" id="js-save-trick-button">Save</button>
                         </div>
 
                       {{ form_end(form) }}
+
 
                     </div>
 
@@ -79,7 +93,7 @@
 
               {% endif %}
 
-              {% if 'edit' not in app.request.uri and 'add' not in app.request.uri %}
+              {% if app.request.get('action') != 'create' and app.request.get('action') != 'add'  and app.request.get('action') != 'edit' and app.request.get('action') != 'edit' %}
 
                 <!-- description start -->
                 <section class="container bg-light content">
@@ -127,7 +141,9 @@
                       {% endif %}
 
                       <ul class="comment-list" id="js-comment-list">
-                        <div class="ajax-loader show" id="js-comment-form-ajax-loader"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#209CEE"/></svg></div>
+                        {% if trick.comments.count > 0 %}
+                          <div class="ajax-loader show" id="js-comment-form-ajax-loader"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#209CEE"/></svg></div>
+                        {% endif %}
                       </ul>
                       
                     </div>

@@ -28,39 +28,21 @@ class TrickHandler
         $this->manager = $manager;
         $this->slug = $slug;
     }
-        
+    
+    /**
+     * handle the trick edit form
+     *
+     * @param Request $request
+     * @param Form $form
+     * @param Trick $trick
+     * @param User $user
+     * @param string $action Type of action requested : create, add, edit, delete, confirm_deletion
+     * @return void
+     */
     public function handle(Request $request, Form $form, Trick $trick, User $user, $action)
     {   
-
-        // handle requested data
-        $this->form = $form->handleRequest($request);
-
-        // if form is submitted and valid
-        if($this->form->isSubmitted() && $this->form->isValid()) {
-
-            if($action === "add") {
-                $trick->setUser($user);
-                $trick->setCreationDate(new \DateTime);
-                $trick->setSlug(
-                    $this->slug->createSlug($trick->getName())
-                );
-            }
-
-            if($action === "edit") {
-                $trick->setmodificationDate(new \DateTime);
-            }
-
-            // store data into database
-            $this->manager->persist($trick);
-            $this->manager->flush();
-
-            $this->success = true;
-            $this->session->getFlashBag()->add('trick-success', 'The trick has been updated successfully.');
-            return $this;
-
-        }
         
-        // delete trick mode
+        // if delete trick mode with confirmation, remove trick and set success message
         if($action === "confirm_deletion") {
             $this->manager->remove($trick);
             $this->manager->flush();
@@ -68,6 +50,46 @@ class TrickHandler
             $this->session->getFlashBag()->add('body-success', 'The trick file has been deleted successfully.');
             return $this;
         } 
+
+        // handle requested data
+        $this->form = $form->handleRequest($request);
+
+        // if form is submitted and valid
+        if($this->form->isSubmitted() && $this->form->isValid()) {
+
+            // if new trick, set user and creation date 
+            if($action === "create") {
+                $trick->setUser($user);
+                $trick->setCreationDate(new \DateTime);
+            }
+
+            // if edit set modification date
+            if($action === "edit") {
+                $trick->setmodificationDate(new \DateTime);
+            }
+
+            // set slug
+            $trick->setSlug(
+                $this->slug->createSlug($trick->getName())
+            );           
+
+            // store data into database
+            $this->manager->persist($trick);
+            $this->manager->flush();
+
+            // set success
+            $this->success = true;
+
+            // set flash messages
+            if($action === 'add') {
+                $this->session->getFlashBag()->add('body-success', 'The trick has been added successfully.');
+            } elseif($action !== 'create') {
+                $this->session->getFlashBag()->add('trick-success', 'The trick has been updated successfully.');
+            }
+
+            return $this;
+
+        }
 
         return $this;
     }

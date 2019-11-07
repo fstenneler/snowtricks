@@ -14,7 +14,7 @@
                         <h2 class="subheading">Browse the list of tricks</h2>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <div class="add-trick">
-                            <button type="button" class="btn btn-primary" id="js-add-trick" data-url="{{ path('edit_trick', {trickSlug: 'new', action: 'add'}) }}">Add trick</button>
+                            <button type="button" class="btn btn-primary" id="js-add-trick" data-url="{{ path('edit_trick', {trickSlug: 'new', action: 'create'}) }}">Add trick</button>
                         </div>
                         {% endif %}
                     </div>                    

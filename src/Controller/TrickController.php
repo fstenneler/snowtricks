@@ -211,7 +211,7 @@ class TrickController extends AbstractController
     *   name="edit_trick",
     *   methods={"POST","GET","HEAD"},
     *   defaults={"trickSlug" = "aa", "action" = "add"},
-    *   requirements={"trickSlug" = "[a-z0-9\-]*", "action" = "(add|edit|delete|confirm_deletion)"})
+    *   requirements={"trickSlug" = "[a-z0-9\-]*", "action" = "(create|add|edit|delete|confirm_deletion)"})
     */
    public function editTrick($trickSlug, $action, Request $request, ObjectManager $manager, TrickHandler $trickHandler)
    {
@@ -222,12 +222,13 @@ class TrickController extends AbstractController
         ->getRepository(Trick::class)
         ->findOneBy(['slug' => $trickSlug]);
 
-        if(!$trick && $trickSlug !== 'new') {
+        // redirect to 404 if trick not found
+        if(!$trick && $action !== 'create') {
             throw $this->createNotFoundException('Requested trick slug not found');
         }
 
         // create new trick mode
-        if($action === "add") {
+        if($action == 'create') {
             $trick = new Trick();
         } 
 
@@ -235,14 +236,20 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
         $handler = $trickHandler->handle($request, $form, $trick, $this->getUser(), $action);
 
-        // redirection if success
+        // redirection on success
         if($handler->getSuccess()) {
-            if($action === 'add' || $action === 'edit') {
-                return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => 'edit']);
-            }
-            if($action === 'confirm_deletion') {
+
+            // if trick deleted or added, redirect to tricks page
+            if($action === 'add' || $action === 'confirm_deletion') {
                 return $this->redirectToRoute('tricks');
             }
+
+            // if trick created in step 1, redirect to step 2
+            if($action === 'create') {
+                return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => 'add']);
+            }
+            return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => $action]);
+
         }
 
         return $this->render('tricks/single.html.twig', [

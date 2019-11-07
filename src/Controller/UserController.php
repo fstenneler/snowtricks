@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Services\SendMail;
 use App\Form\Type\AvatarType;
+use App\Services\GenerateToken;
 use App\Form\Type\RegistrationType;
 use App\Form\Handler\RegisterHandler;
 use App\Form\Handler\ManageAvatarHandler;
@@ -49,7 +50,7 @@ class UserController extends AbstractController
     /**
      * @Route("/resend-activation-token/{userName}", methods={"GET"}, defaults={"userName" = null}, name="app_resend_activation_token")
      */
-    public function reSendActivationToken(Request $request, SendMail $sendMail, $userName)
+    public function reSendActivationToken(Request $request, ObjectManager $manager, SendMail $sendMail, GenerateToken $generateToken, $userName)
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
@@ -60,6 +61,17 @@ class UserController extends AbstractController
             $this->addFlash('User name could not be found.');
             return $this->redirectToRoute('app_login');
         }
+
+        // generate token
+        $user = $generateToken->generate($user);
+        if($user->getToken() === null) {
+            $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : Token error');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // save data into database
+        $manager->persist($user);
+        $manager->flush();
 
         // send activation mail
         $sendResult = $sendMail->sendActivationMail($user);

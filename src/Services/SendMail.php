@@ -29,7 +29,7 @@ class SendMail
     {
         $token = $user->getToken();
 
-        if($token === null) {
+        if($token === '') {
             return 'The token is not defined, please try again.';
         }
 

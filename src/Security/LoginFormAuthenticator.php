@@ -53,7 +53,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * first method called, check if the login route was called with post method
+     * 1st method called, check if the login route was called with post method
      *
      * @param Request $request
      * @return boolean
@@ -65,7 +65,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * Second method called, if supports() method return true
+     * 2nd method called, if supports() method return true
      * Store post fields into an array named $credentials and store in session last userName posted
      *
      * @param Request $request
@@ -87,7 +87,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * third method called
+     * 3rd method called
      * check the posted token validity, and search the userName in database
      * if the token is correct and the user was found, return the created User object
      *
@@ -120,7 +120,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * fourth method called
+     * 4th method called
      * check if the password posted is the same than the user password
      *
      * @param array $credentials
@@ -133,7 +133,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * fifth method called
+     * 5th method called
      * if the checkCredentials() method return true, if a target path was stored into session, redirect to this route
      * else redirect to the manage_account route
      *
@@ -155,7 +155,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * return the app_login route url
+     * Return the app_login route url
      *
      * @return string
      */

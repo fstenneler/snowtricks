@@ -29,6 +29,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotNull
      */
     private $userName;
 
@@ -45,6 +46,7 @@ class User implements UserInterface
      * @Assert\Length(
      *     min = "6",
      *     minMessage = "Your password must be at least {{ limit }} characters long")
+     * @Assert\NotNull
      */
     private $password;
 

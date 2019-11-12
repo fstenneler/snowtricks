@@ -21,6 +21,12 @@ class AppFixtures extends Fixture
         $this->passwordEncoder = $passwordEncoder;
     }
 
+    /**
+     * Load fixtures in a certain order
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager, 'src/DataFixtures/Data/user.yaml');

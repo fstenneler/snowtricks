@@ -6,26 +6,26 @@ use App\Entity\Media;
 use App\Entity\Trick;
 use App\Entity\Comment;
 use App\Entity\Category;
-use App\Form\Type\CommentType;
-use App\Form\Type\TrickType;
-use App\Form\Type\VideoType;
-use App\Form\Type\PictureType;
-use App\Form\Handler\TrickHandler;
-use App\Form\Handler\VideoHandler;
-use App\Form\Handler\CommentHandler;
-use App\Form\Handler\PictureHandler;
+use App\Form\Type\Trick\CommentType;
+use App\Form\Type\Trick\TrickType;
+use App\Form\Type\Trick\VideoType;
+use App\Form\Type\Trick\PictureType;
+use App\Form\Handler\Trick\TrickHandler;
+use App\Form\Handler\Trick\VideoHandler;
+use App\Form\Handler\Trick\CommentHandler;
+use App\Form\Handler\Trick\PictureHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController
 {
 
     /**
-     * homepage
+     * Home page
+     * 
      * @Route("/", name="home", methods={"GET","HEAD"})
      */
     public function index()
@@ -41,7 +41,8 @@ class TrickController extends AbstractController
     }
     
     /**
-     * tricks page
+     * Tricks page
+     * 
     * @Route("/category/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"}, requirements={"categorySlug"="[a-z0-9\-]*"})
     */
    public function tricks($categorySlug)
@@ -49,7 +50,9 @@ class TrickController extends AbstractController
 
        // 404 route for invalid category slugs
        if($categorySlug !== "all") {
-           $category = $this->getDoctrine()->getRepository(Category::class)->findOneBySlug($categorySlug);
+           $category = $this->getDoctrine()
+                ->getRepository(Category::class)
+                ->findOneBySlug($categorySlug);
            if(!$category) {
                throw $this->createNotFoundException('Requested category slug not found');
            }
@@ -71,7 +74,8 @@ class TrickController extends AbstractController
    }
    
     /**
-     * ajax trick load
+     * Ajax tricks load
+     * 
      * @Route(
      *      "/load-results/{categorySlug}/{firstResult}/{orderBy}",
      *      name="load_results",
@@ -97,7 +101,8 @@ class TrickController extends AbstractController
      }
 
     /**
-     * ajax load media list
+     * Ajax media load
+     * 
     * @Route("/tricks/{trickSlug}/media-list-edit", name="media_list_edit", methods={"GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
    public function mediaListEdit($trickSlug)
@@ -118,7 +123,8 @@ class TrickController extends AbstractController
    }
    
     /**
-     * ajax edit media
+     * Ajax edit media form
+     * 
     * @Route(
     *   "/tricks/{trickSlug}/edit-media/{action}/{mediaId}",
     *   name="edit_media", methods={"POST","GET"},
@@ -182,7 +188,8 @@ class TrickController extends AbstractController
 
    
     /**
-     * single trick page
+     * Single trick page
+     * 
     * @Route("/tricks/{trickSlug}", name="single_trick", methods={"GET","HEAD"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
    public function singleTrick($trickSlug)
@@ -203,13 +210,14 @@ class TrickController extends AbstractController
    }
    
     /**
-     * edit trick page
+     * Edit trick page
+     * 
     * @Route(
     *   "/tricks/{action}/{trickSlug}",
     *   name="edit_trick",
     *   methods={"POST","GET","HEAD"},
     *   defaults={"trickSlug" = "aa", "action" = "add"},
-    *   requirements={"trickSlug" = "[a-z0-9\-]*", "action" = "(add|edit|delete|confirm_deletion)"})
+    *   requirements={"trickSlug" = "[a-z0-9\-]*", "action" = "(create|add|edit|delete|confirm_deletion)"})
     */
    public function editTrick($trickSlug, $action, Request $request, ObjectManager $manager, TrickHandler $trickHandler)
    {
@@ -220,12 +228,13 @@ class TrickController extends AbstractController
         ->getRepository(Trick::class)
         ->findOneBy(['slug' => $trickSlug]);
 
-        if(!$trick && $trickSlug !== 'new') {
+        // redirect to 404 if trick not found
+        if(!$trick && $action !== 'create') {
             throw $this->createNotFoundException('Requested trick slug not found');
         }
 
         // create new trick mode
-        if($action === "add") {
+        if($action == 'create') {
             $trick = new Trick();
         } 
 
@@ -233,14 +242,20 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
         $handler = $trickHandler->handle($request, $form, $trick, $this->getUser(), $action);
 
-        // redirection if success
+        // redirection on success
         if($handler->getSuccess()) {
-            if($action === 'add' || $action === 'edit') {
-                return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => 'edit']);
-            }
-            if($action === 'confirm_deletion') {
+
+            // if trick deleted or added, redirect to tricks page
+            if($action === 'add' || $action === 'confirm_deletion') {
                 return $this->redirectToRoute('tricks');
             }
+
+            // if trick created in step 1, redirect to step 2
+            if($action === 'create') {
+                return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => 'add']);
+            }
+            return $this->redirectToRoute('edit_trick', ['trickSlug' => $trick->getSlug(), 'action' => $action]);
+
         }
 
         return $this->render('tricks/single.html.twig', [
@@ -251,7 +266,8 @@ class TrickController extends AbstractController
    }
  
     /**
-     * ajax load comments
+     * Ajax comments load
+     * 
      * @Route(
      *      "/load-comments/{trickId}/{firstResult}",
      *      name="load_comments",
@@ -272,7 +288,8 @@ class TrickController extends AbstractController
     }   
   
     /**
-     * ajax add comment
+     * Ajax add comment form
+     * 
     * @Route("/tricks/{trickSlug}/add-comment", name="add_comment", methods={"POST","GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
     public function addComment($trickSlug, Request $request, ObjectManager $manager, CommentHandler $commentHandler)

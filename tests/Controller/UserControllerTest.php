@@ -112,14 +112,14 @@ class UserControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/register');
 
         $form = $crawler->selectButton('Create an account')->form();
-        $form['registration[userName]'] = 'user1';
-        $form['registration[email]'] = 'test@orlinstreet.rocks';
+        $form['registration[userName]'] = 'Jimmy';
+        $form['registration[email]'] = 'jimmy@orlinstreet.rocks';
         $form['registration[password]'] = 'azerty';
         $crawler = $client->submit($form);
 
         $user = $this->entityManager
             ->getRepository(User::class)
-            ->findBy(['userName' => 'user1']);
+            ->findBy(['userName' => 'Jimmy']);
 
         $this->assertSame(1, count($user));
 

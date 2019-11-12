@@ -19,7 +19,7 @@ class GenerateToken
      * Generate and save User token
      *
      * @param User $user
-     * @return User $user
+     * @return User
      */
     public function generate(User $user)
     {

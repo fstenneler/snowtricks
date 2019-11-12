@@ -14,7 +14,7 @@
         </div>
     {% endfor %}
 
-    {{ form_row(form.message, { 'label': false }) }}
+    {{ form_row(form.message, { 'label': false, attr: { 'placeholder': 'message' } }) }}
 
     <button type="submit" class="btn py-3 px-4 btn-primary">Leave a comment</button>
 

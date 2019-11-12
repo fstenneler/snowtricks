@@ -29,7 +29,7 @@ class SendMail
     {
         $token = $user->getToken();
 
-        if($token === null) {
+        if($token === '') {
             return 'The token is not defined, please try again.';
         }
 
@@ -73,6 +73,15 @@ class SendMail
 
     }
 
+    /**
+     * Send mail
+     *
+     * @param string $recipient
+     * @param string $subject
+     * @param string $html
+     * @param string $txt
+     * @return bool
+     */
     private function sendMail($recipient, $subject, $html, $txt) {
 
         $message = (new \Swift_Message($subject))

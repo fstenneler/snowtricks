@@ -6,6 +6,12 @@ namespace App\Services;
 class Slug
 {
 
+    /**
+     * Create a slug from a string
+     *
+     * @param string $name The name
+     * @return string The name converted to slug
+     */
     public static function createSlug($name)
     {
         $name = htmlentities( $name, ENT_NOQUOTES, 'utf-8' );

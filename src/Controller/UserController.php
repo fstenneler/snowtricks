@@ -4,17 +4,19 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Services\SendMail;
-use App\Form\Type\AvatarType;
 use App\Services\GenerateToken;
-use App\Form\Type\RegistrationType;
-use App\Form\Handler\RegisterHandler;
-use App\Form\Handler\ManageAvatarHandler;
-use App\Form\Handler\ManageAccountHandler;
-use App\Form\Handler\ResetPassswordHandler;
+use App\Form\Type\User\AvatarType;
+use App\Form\Type\User\RegistrationType;
+use App\Form\Type\User\ResetPasswordType;
+use App\Form\Type\User\ForgottenPasswordType;
+use App\Form\Handler\User\RegisterHandler;
+use App\Form\Handler\User\ManageAvatarHandler;
+use App\Form\Handler\User\ManageAccountHandler;
+use App\Form\Handler\User\ResetPassswordHandler;
+use App\Form\Handler\User\ForgottenPassswordHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\Handler\ForgottenPassswordHandler;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,12 +42,12 @@ class UserController extends AbstractController
         $handler = $registerHandler->handle($request, $form, $user); 
         
         // redirect on success
-        if($handler['success']) {
+        if($handler->getSuccess() === true) {
             return $this->redirectToRoute('home');
         }
 
         return $this->render('user/manage_account.html.twig', [
-            'form' => $handler['form']->createView()
+            'form' => $handler->getForm()->createView()
         ]);
     }
 
@@ -133,21 +135,21 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         // edit user
-        $userForm = $this->createForm(RegistrationType::class);
-        $userHandler = $manageAccountHandler->handle($request, $userForm, $user);
+        $form = $this->createForm(RegistrationType::class);
+        $userHandler = $manageAccountHandler->handle($request, $form, $user);
 
         // edit avatar
         $avatarForm = $this->createForm(AvatarType::class, $user);
         $avatarHandler = $manageAvatarHandler->handle($request, $avatarForm, $user);
 
         // if success, reload page
-        if($userHandler['success'] || $avatarHandler['success']) {
+        if($userHandler->getSuccess() === true || $avatarHandler->getSuccess() === true) {
             return $this->redirectToRoute('manage_account');
         }
 
         return $this->render('user/manage_account.html.twig', [
-            'form' => $userHandler['form']->createView(),
-            'avatarForm' => $avatarHandler['form']->createView()
+            'form' => $userHandler->getForm()->createView(),
+            'avatarForm' => $avatarHandler->getForm()->createView()
         ]);
     }
 
@@ -194,13 +196,16 @@ class UserController extends AbstractController
      */
     public function forgottenPassword(Request $request, ForgottenPassswordHandler $forgottenPasswordHandler) : Response
     {
-        $handler = $forgottenPasswordHandler->handle($request);     
-        if($handler['success']) {
-            $this->addFlash('body-success', 'We just sent you an email. Please check your mailbox and click the given link to reset your password.');
+        $form = $this->createForm(ForgottenPasswordType::class);
+        $handler = $forgottenPasswordHandler->handle($request, $form);     
+
+        if($handler->getSuccess() === true) {
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('user/forgotten_password.html.twig');
+        return $this->render('user/forgotten_password.html.twig', [
+            'form' => $handler->getForm()->createView()
+        ]);
     }
 
     /**
@@ -208,15 +213,37 @@ class UserController extends AbstractController
      * 
      * @Route("/reset-password/{token}", methods={"GET","POST"}, defaults={"token" = null}, name="app_reset_password")
      */
-    public function resetPassword(Request $request, ResetPassswordHandler $resetpasswordHandler, $token)
+    public function resetPassword(Request $request, ObjectManager $manager, ResetPassswordHandler $resetpasswordHandler, $token)
     {        
-        $handler = $resetpasswordHandler->handle($request, $token);   
-        if($handler['success']) {
-            $this->addFlash('body-success', 'Your password has been modified, please login.');
+
+        // search the user with requested token
+        $user = $manager
+            ->getRepository(User::class)
+            ->findOneBy(['token' => $token]);
+
+        // if user not found, display an error message
+        if(!$user) {            
+            $this->addFlash('body-error', 'Token error, please try again');
+            return $this->redirectToRoute('app_forgotten_password');
+        }
+
+        // if token was created more than 30 days before, display an error message
+        if($user->getTokenCreationDate()->diff(new \DateTime())->days > 30) {
+            $this->addFlash('body-error', 'This email was sent over 30 days ago, please try again.');
+            return $this->redirectToRoute('app_forgotten_password');
+        }
+
+        $form = $this->createForm(ResetPasswordType::class, $user);
+        $handler = $resetpasswordHandler->handle($request, $form, $user, $token); 
+
+        if($handler->getSuccess() === true) {            
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('user/reset_password.html.twig', ['token' => $token]);
+        return $this->render('user/reset_password.html.twig', [
+            'form' => $handler->getForm()->createView(),
+            'token' => $token
+        ]);
 
     }
 

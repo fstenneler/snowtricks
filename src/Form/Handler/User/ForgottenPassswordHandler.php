@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Form\Handler;
+namespace App\Form\Handler\User;
 
 use App\Entity\User;
 use App\Services\SendMail;
 use App\Services\GenerateToken;
+use Symfony\Component\Form\Form;
+use App\Form\Handler\AbstractHandler;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
-class ForgottenPassswordHandler
+class ForgottenPassswordHandler extends AbstractHandler
 {
     private $session;
     private $manager;
@@ -39,27 +39,31 @@ class ForgottenPassswordHandler
      * @param Request $request
      * @return array
      */
-    public function handle(Request $request)
+    public function handle(Request $request, Form $form)
     {
 
+        // handle requested data
+        $this->form = $form->handleRequest($request);
+        
         // test if form is submitted
-        if($request->isMethod('POST')) {
+        if($this->form->isSubmitted() && $this->form->isValid()) {
+
+            $email = $form->getData()['email'];
 
             // search the user with requested email
-            $email = $request->request->get('email');
             $user = $this->manager
                 ->getRepository(User::class)
                 ->findOneBy(['email' => $email]);
             if(!$user) {
-                $this->session->getFlashBag()->add('error', 'Email address "' . $email . '" could not be found');
-                return ['success' => false];
+                $form->get('email')->addError(new FormError('Email address "' . $email . '" could not be found'));
+                return $this->setSuccess(false);
             }
 
             // generate token
             $user = $this->generateToken->generate($user);
             if($user->getToken() === null) {
-                $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : Token error');
-                return ['success' => false];
+                $this->session->getFlashBag()->add('error', 'An unexpected error has occured while sending the activation mail : Token error');
+                return $this->setSuccess(false);
             }
             
             // save token into database
@@ -70,14 +74,17 @@ class ForgottenPassswordHandler
             $sendResult = $this->sendMail->sendPasswordResetMail($user);
             if($sendResult !== true) {
                 $this->session->getFlashBag()->add('error', 'An unexpected error has occured while sending the password reset mail : ' . $sendResult);
-                return ['success' => false];
+                return $this->setSuccess(false);
             }
-
-            return ['success' => true];
+            
+            $this->session->getFlashBag()->add('body-success', 'We just sent you an email. Please check your mailbox and click the given link to reset your password.');
+            return $this->setSuccess(true);
 
         }
 
-        return ['success' => false];
+        return $this->setSuccess(false);
+
     }
+
 
 }

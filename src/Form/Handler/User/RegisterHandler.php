@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Form\Handler;
+namespace App\Form\Handler\User;
 
 use App\Entity\User;
 use App\Services\SendMail;
 use App\Services\GenerateToken;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
+use App\Form\Handler\AbstractHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
-class RegisterHandler
+class RegisterHandler extends AbstractHandler
 {
     private $session;
     private $manager;
@@ -51,10 +47,10 @@ class RegisterHandler
     {
 
         // handle requested data
-        $form->handleRequest($request);
+        $this->form = $form->handleRequest($request);
 
         // if form is submitted and valid, store data, log the user and redirect to the account route
-        if($form->isSubmitted() && $form->isValid()) {
+        if($this->form->isSubmitted() && $this->form->isValid()) {
 
             // encode password
             $user->setPassword(
@@ -65,7 +61,7 @@ class RegisterHandler
             $user = $this->generateToken->generate($user);
             if($user->getToken() === null) {
                 $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : Token error');
-                return ['success' => false, 'form' => $form];
+                return $this->setSuccess(false);
             }
 
             // save data into database
@@ -76,15 +72,15 @@ class RegisterHandler
             $sendResult = $this->sendMail->sendActivationMail($user);
             if($sendResult !== true) {
                 $this->session->getFlashBag()->add('body-error', 'An unexpected error has occured while sending the activation mail : ' . $sendResult);
-                return ['success' => false, 'form' => $form];
+                return $this->setSuccess(false);
             }
             
             $this->session->getFlashBag()->add('body-success', 'We just sent you an email. Please check your mailbox and click the given link to activate your account.');
-            return ['success' => true, 'form' => $form];
+            return $this->setSuccess(true);
 
         }
 
-        return ['success' => false, 'form' => $form];
+        return $this;
     }
 
 }

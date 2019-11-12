@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Form\Type;
+namespace App\Form\Type\User;
 
-use App\Entity\Media;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
-class PictureType extends AbstractType
+class AvatarType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('url', FileType::class, [
-                'label' => 'Trick picture file',
+            ->add('avatar', FileType::class, [
+                'label' => 'Avatar picture file',
                 'mapped' => false,
                 'required' => true,
                 'constraints' => [
                     new File([
-                        'maxSize' => '3M',
+                        'maxSize' => '1024k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
@@ -36,7 +36,7 @@ class PictureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Media::class
+            'data_class' => User::class
         ]);
     }
 }

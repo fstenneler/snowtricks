@@ -1,33 +1,40 @@
 <?php
 
-namespace App\Tests\Form\Type;
+namespace App\Tests\Form\Type\Trick;
 
-use App\Form\Type\VideoType;
 use App\Entity\Media;
+use App\Form\Type\Trick\PictureType;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 
-class VideoTypeTest extends TypeTestCase
+class PictureTypeTest extends TypeTestCase
 {
+
+    protected function getExtensions()
+    {
+        $validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
+
+        return [
+            new ValidatorExtension($validator),
+        ];
+    }
+
     public function testSubmitValidData()
     {
 
         // object to compare
         $objectToCompare = new Media();
-        $form = $this->factory->create(VideoType::class, $objectToCompare);
+        $form = $this->factory->create(PictureType::class, $objectToCompare);
         $formData = [
-            'url' => 'https://youtu.be/PHjpWo4edfw?list=RDGMEMJQXQAmqrnmK1SEjY_rKBGAVMPHjpWo4edfw'
+            'url' => 'suitcase-grab-1.jpg'
         ];
         $form->submit($formData);
 
-        // object
-        $object = new Media();
-        $object->setUrl('https://youtu.be/PHjpWo4edfw?list=RDGMEMJQXQAmqrnmK1SEjY_rKBGAVMPHjpWo4edfw');
-
         // check if form is synchronized
         $this->assertTrue($form->isSynchronized());
-
-        // check that $objectToCompare was modified as expected when the form was submitted
-        $this->assertEquals($object, $objectToCompare);
 
         // check that each field will be rendered in the form
         $view = $form->createView();

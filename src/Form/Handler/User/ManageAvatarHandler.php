@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Form\Handler;
+namespace App\Form\Handler\User;
 
 use App\Entity\User;
 use App\Services\FileUpload;
 use Symfony\Component\Form\Form;
+use App\Form\Handler\AbstractHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class ManageAvatarHandler
+class ManageAvatarHandler extends AbstractHandler
 {
     private $session;
     private $manager;
@@ -38,12 +39,12 @@ class ManageAvatarHandler
     {
 
         // handle requested data
-        $form->handleRequest($request);
+        $this->form = $form->handleRequest($request);
 
         // if form is submitted and valid, store data, log the user and redirect to the account route
-        if($form->isSubmitted() && $form->isValid()) {
+        if($this->form->isSubmitted() && $this->form->isValid()) {
 
-            $avatarFile = $form['avatar']->getData();
+            $avatarFile = $this->form['avatar']->getData();
 
             $uploadResult = $this->fileUpload->upload(
                 $avatarFile,
@@ -62,11 +63,11 @@ class ManageAvatarHandler
             $this->manager->persist($user);
             $this->manager->flush();
 
-            return ['success' => true];
+            return $this->setSuccess(true);
 
         }
 
-        return ['success' => false, 'form' => $form];
+        return $this->setSuccess(false);
     }
 
 }

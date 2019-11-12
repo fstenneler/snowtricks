@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Form\Handler;
+namespace App\Form\Handler\Trick;
 
 use App\Entity\User;
 use App\Entity\Trick;
 use App\Services\Slug;
 use Symfony\Component\Form\Form;
+use App\Form\Handler\AbstractHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class TrickHandler
+class TrickHandler extends AbstractHandler
 {
     private $session;
     private $manager;
-    private $success = false;
-    private $form;
     private $slug;
 
     public function __construct(
@@ -45,10 +44,9 @@ class TrickHandler
         // if delete trick mode with confirmation, remove trick and set success message
         if($action === "confirm_deletion") {
             $this->manager->remove($trick);
-            $this->manager->flush();
-            $this->success = true;
+            $this->manager->flush();            
             $this->session->getFlashBag()->add('body-success', 'The trick file has been deleted successfully.');
-            return $this;
+            return $this->setSuccess(true);
         } 
 
         // handle requested data
@@ -77,9 +75,6 @@ class TrickHandler
             $this->manager->persist($trick);
             $this->manager->flush();
 
-            // set success
-            $this->success = true;
-
             // set flash messages
             if($action === 'add') {
                 $this->session->getFlashBag()->add('body-success', 'The trick has been added successfully.');
@@ -87,31 +82,11 @@ class TrickHandler
                 $this->session->getFlashBag()->add('trick-success', 'The trick has been updated successfully.');
             }
 
-            return $this;
+            return $this->setSuccess(true);
 
         }
 
-        return $this;
-    }
-
-    /**
-     * Get trick form
-     *
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
-     * Get handle success
-     *
-     * @return bool
-     */
-    public function getSuccess()
-    {
-        return $this->success;
+        return $this->setSuccess(false);
     }
 
 }

@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Form\Handler;
+namespace App\Form\Handler\Trick;
 
 use App\Entity\Media;
 use App\Services\Video;
 use Symfony\Component\Form\Form;
+use App\Form\Handler\AbstractHandler;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class VideoHandler
+class VideoHandler extends AbstractHandler
 {
     private $session;
     private $manager;
     private $video;
-    private $success = false;
-    private $form;
 
     public function __construct(
         SessionInterface $session,
@@ -49,13 +49,13 @@ class VideoHandler
             $url = $this->form['url']->getData();
 
             if(!$this->video->isVideoCodeCorrect($url)) {
-                $this->session->getFlashBag()->add('video-error', 'The given video integration code is not supported.');
-                return $this;
+                $this->form->get('url')->addError(new FormError('The given video integration code is not supported.'));
+                return $this->setSuccess(false);
             }
 
             if(!$this->video->isIframe($url)) {
-                $this->session->getFlashBag()->add('video-error', 'Please give a iframe video integration code.');
-                return $this;
+                $this->form->get('url')->addError(new FormError('Please give a iframe video integration code.'));
+                return $this->setSuccess(false);
             }
 
             $media->setUrl($this->video->videoCodeToUrl($url));
@@ -63,10 +63,9 @@ class VideoHandler
             // store data into database
             $this->manager->persist($media);
             $this->manager->flush();
-
-            $this->success = true;
+            
             $this->session->getFlashBag()->add('video-success', 'Your media file has been successfully uploaded.');
-            return $this;
+            return $this->setSuccess(true);
 
         }
         
@@ -75,7 +74,7 @@ class VideoHandler
             $this->manager->remove($media);
             $this->manager->flush();
             $this->session->getFlashBag()->add('delete-media-success', 'The media file has been deleted.');
-            return $this;
+            return $this->setSuccess(true);
         } 
 
         // set form field to blank
@@ -83,27 +82,8 @@ class VideoHandler
             $this->form->get('url')->setData('');
         }
 
-        return $this;
-    }
+        return $this->setSuccess(false);
 
-    /**
-     * Get video form
-     *
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
-     * Get handle success
-     *
-     * @return bool
-     */
-    public function getSuccess()
-    {
-        return $this->success;
     }
 
 }

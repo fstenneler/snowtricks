@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Form\Handler;
+namespace App\Form\Handler\Trick;
 
 use App\Entity\Comment;
 use Symfony\Component\Form\Form;
+use App\Form\Handler\AbstractHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class CommentHandler
+class CommentHandler extends AbstractHandler
 {
     private $manager;
-    private $success = false;
-    private $form;
 
     public function __construct(
         ObjectManager $manager
@@ -44,32 +42,12 @@ class CommentHandler
             $this->manager->persist($comment);
             $this->manager->flush();
 
-            $this->success = true;
-            return $this;
+            return $this->setSuccess(true);
 
         }
 
-        return $this;
-    }
+        return $this->setSuccess(false);
 
-    /**
-     * Get the comment form
-     *
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
-     * Get form handle success
-     *
-     * @return bool
-     */
-    public function getSuccess()
-    {
-        return $this->success;
     }
 
 }

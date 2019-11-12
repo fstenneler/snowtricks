@@ -6,19 +6,18 @@ use App\Entity\Media;
 use App\Entity\Trick;
 use App\Entity\Comment;
 use App\Entity\Category;
-use App\Form\Type\CommentType;
-use App\Form\Type\TrickType;
-use App\Form\Type\VideoType;
-use App\Form\Type\PictureType;
-use App\Form\Handler\TrickHandler;
-use App\Form\Handler\VideoHandler;
-use App\Form\Handler\CommentHandler;
-use App\Form\Handler\PictureHandler;
+use App\Form\Type\Trick\CommentType;
+use App\Form\Type\Trick\TrickType;
+use App\Form\Type\Trick\VideoType;
+use App\Form\Type\Trick\PictureType;
+use App\Form\Handler\Trick\TrickHandler;
+use App\Form\Handler\Trick\VideoHandler;
+use App\Form\Handler\Trick\CommentHandler;
+use App\Form\Handler\Trick\PictureHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController

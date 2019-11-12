@@ -1,29 +1,25 @@
 <?php
 
-namespace App\Tests\Form\Type;
+namespace App\Tests\Form\Type\User;
 
-use App\Form\Type\RegistrationType;
+use App\Form\Type\User\ForgottenPasswordType;
 use App\Entity\User;
 use Symfony\Component\Form\Test\TypeTestCase;
 
-class RegistrationTypeTest extends TypeTestCase
+class ForgottenPasswordTypeTest extends TypeTestCase
 {
     public function testSubmitValidData()
     {
         $formData = [
-            'userName' => 'user1',
-            'email' => 'user1@orlinstreet.rocks',
-            'password' => 'azerty'
+            'email' => 'jimmy@orlinstreet.rocks'
         ];
 
         $objectToCompare = new User();
         // $objectToCompare will retrieve data from the form submission; pass it as the second argument
-        $form = $this->factory->create(RegistrationType::class, $objectToCompare);
+        $form = $this->factory->create(ForgottenPasswordType::class, $objectToCompare);
 
         $object = new User();
-        $object->setUserName('user1');
-        $object->setEmail('user1@orlinstreet.rocks');
-        $object->setPassword('azerty');
+        $object->setEmail('jimmy@orlinstreet.rocks');
 
         // submit the data to the form directly
         $form->submit($formData);

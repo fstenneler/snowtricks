@@ -42,7 +42,7 @@ class UserController extends AbstractController
         $handler = $registerHandler->handle($request, $form, $user); 
         
         // redirect on success
-        if($handler->getSuccess() === true) {
+        if($handler->isSuccess() === true) {
             return $this->redirectToRoute('home');
         }
 
@@ -56,7 +56,7 @@ class UserController extends AbstractController
      * 
      * @Route("/resend-activation-token/{userName}", methods={"GET"}, defaults={"userName" = null}, name="app_resend_activation_token")
      */
-    public function reSendActivationToken(Request $request, ObjectManager $manager, SendMail $sendMail, GenerateToken $generateToken, $userName)
+    public function reSendActivationToken(ObjectManager $manager, SendMail $sendMail, GenerateToken $generateToken, $userName)
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
@@ -96,7 +96,7 @@ class UserController extends AbstractController
      * 
      * @Route("/activate-account/{token}", methods={"GET","POST"}, defaults={"token" = null}, name="app_activate_account")
      */
-    public function activateAccount(Request $request, ObjectManager $manager, $token)
+    public function activateAccount(ObjectManager $manager, $token)
     {        
         // search the user with requested token
         $user = $this->getDoctrine()
@@ -143,7 +143,7 @@ class UserController extends AbstractController
         $avatarHandler = $manageAvatarHandler->handle($request, $avatarForm, $user);
 
         // if success, reload page
-        if($userHandler->getSuccess() === true || $avatarHandler->getSuccess() === true) {
+        if($userHandler->isSuccess() === true || $avatarHandler->isSuccess() === true) {
             return $this->redirectToRoute('manage_account');
         }
 
@@ -199,7 +199,7 @@ class UserController extends AbstractController
         $form = $this->createForm(ForgottenPasswordType::class);
         $handler = $forgottenPasswordHandler->handle($request, $form);     
 
-        if($handler->getSuccess() === true) {
+        if($handler->isSuccess() === true) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -234,9 +234,9 @@ class UserController extends AbstractController
         }
 
         $form = $this->createForm(ResetPasswordType::class, $user);
-        $handler = $resetpasswordHandler->handle($request, $form, $user, $token); 
+        $handler = $resetpasswordHandler->handle($request, $form, $user); 
 
-        if($handler->getSuccess() === true) {            
+        if($handler->isSuccess() === true) {            
             return $this->redirectToRoute('app_login');
         }
 

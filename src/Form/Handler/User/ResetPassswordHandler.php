@@ -35,7 +35,7 @@ class ResetPassswordHandler extends AbstractHandler
      * @param string $token
      * @return array
      */
-    public function handle(Request $request, Form $form, User $user, $token)
+    public function handle(Request $request, Form $form, User $user)
     {
 
         // handle requested data

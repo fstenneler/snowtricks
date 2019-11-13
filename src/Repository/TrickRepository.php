@@ -50,7 +50,7 @@ class TrickRepository extends ServiceEntityRepository
         $request['orderByDirection'] = preg_replace("#^(.+)-#","",$request['orderBy']);
 
         // do query
-        $qb = $this->createQueryBuilder('t')
+        $queryBuilder = $this->createQueryBuilder('t')
             ->addSelect('m')
             ->leftJoin('t.media', 'm', 'WITH', null, 'm.id')
             ->orderBy('t.' . $request['orderByField'], $request['orderByDirection'])
@@ -58,12 +58,12 @@ class TrickRepository extends ServiceEntityRepository
             ->setMaxResults($request['maxResults']);
         
         if($request['categorySlug'] != "all") {
-            $qb->leftJoin('t.category', 'c')
+            $queryBuilder->leftJoin('t.category', 'c')
                 ->andWhere('c.slug = :cat')
                 ->setParameter('cat', $request['categorySlug']);
         }
 
-        return new Paginator($qb);
+        return new Paginator($queryBuilder);
 
     }
 

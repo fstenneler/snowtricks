@@ -140,7 +140,6 @@ class TrickController extends AbstractController
        $action,
        $mediaId,
        Request $request,
-       ObjectManager $manager,
        PictureHandler $pictureHandler,
        VideoHandler $videoHandler
     )
@@ -223,7 +222,7 @@ class TrickController extends AbstractController
     *   defaults={"trickSlug" = "aa", "action" = "add"},
     *   requirements={"trickSlug" = "[a-z0-9\-]*", "action" = "(create|add|edit|delete|confirm_deletion)"})
     */
-   public function editTrick($trickSlug, $action, Request $request, ObjectManager $manager, TrickHandler $trickHandler)
+   public function editTrick($trickSlug, $action, Request $request, TrickHandler $trickHandler)
    {
         // deny access for unauthenticated users
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -247,7 +246,7 @@ class TrickController extends AbstractController
         $handler = $trickHandler->handle($request, $form, $trick, $this->getUser(), $action);
 
         // redirection on success
-        if($handler->getSuccess()) {
+        if($handler->isSuccess()) {
 
             // if trick deleted or added, redirect to tricks page
             if($action === 'add' || $action === 'confirm_deletion') {
@@ -296,7 +295,7 @@ class TrickController extends AbstractController
      * 
     * @Route("/tricks/{trickSlug}/add-comment", name="add_comment", methods={"POST","GET"}, defaults={"trickSlug" = null}, requirements={"trickSlug"="[a-z0-9\-]*"})
     */
-    public function addComment($trickSlug, Request $request, ObjectManager $manager, CommentHandler $commentHandler)
+    public function addComment($trickSlug, Request $request, CommentHandler $commentHandler)
     {
     
         // deny access for unauthenticated users

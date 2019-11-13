@@ -30,14 +30,14 @@ class CommentRepository extends ServiceEntityRepository
     {
 
         // do query
-        $qb = $this->createQueryBuilder('c')
+        $queryBuilder = $this->createQueryBuilder('c')
             ->orderBy('c.creationDate', 'DESC')
             ->where('c.trick = :trick')
             ->setParameter('trick', $trickId)
             ->setFirstResult($firstResult)
             ->setMaxResults(Comment::NUM_ITEMS);
 
-        return new Paginator($qb);
+        return new Paginator($queryBuilder);
 
     }
 

@@ -16,7 +16,7 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
 ### Download the repository
 
 #### Either from the url
-https://github.com/fstenneler/snowtricks/archive/master.zip
+[https://github.com/fstenneler/snowtricks/archive/master.zip]https://github.com/fstenneler/snowtricks/archive/master.zip
 
 #### Or from Git
     git clone https://github.com/fstenneler/snowtricks.git

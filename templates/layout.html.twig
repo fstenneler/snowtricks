@@ -43,7 +43,7 @@
                 </div>
                 
                 <a href="{{ path("home") }}" class="oi oi-home mobile-icon"></a>
-                <a href="/category" class="oi oi-bookmark mobile-icon"></a>
+                <a href="{{ path("tricks") }}" class="oi oi-bookmark mobile-icon"></a>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <a href="{{ path("app_login") }}" class="oi oi-account-login mobile-icon"></a>
                 {% else %}

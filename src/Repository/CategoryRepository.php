@@ -19,19 +19,4 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    /**
-     * Find one category by slug
-     *
-     * @param $categorySlug
-     * @return Collection
-     */
-    public function findOneBySlug($categorySlug)
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.slug = :cat')
-            ->setParameter('cat', $categorySlug)
-            ->getQuery()
-            ->getResult();
-    }
-
 }

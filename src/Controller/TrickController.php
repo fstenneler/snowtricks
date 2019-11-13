@@ -43,33 +43,37 @@ class TrickController extends AbstractController
     /**
      * Tricks page
      * 
-    * @Route("/category/{categorySlug}", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"}, requirements={"categorySlug"="[a-z0-9\-]*"})
-    */
+     * @Route("/tricks", name="tricks", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"})
+     * @Route("/category/{categorySlug}", name="tricks_by_category", methods={"GET","HEAD"}, defaults={"categorySlug" = "all"}, requirements={"categorySlug"="[a-z0-9\-]*"})
+     */
    public function tricks($categorySlug)
    {
 
        // 404 route for invalid category slugs
-       if($categorySlug !== "all") {
-           $category = $this->getDoctrine()
+        if($categorySlug !== "all") {
+            $category = $this->getDoctrine()
                 ->getRepository(Category::class)
-                ->findOneBySlug($categorySlug);
-           if(!$category) {
-               throw $this->createNotFoundException('Requested category slug not found');
-           }
-       }
+                ->findOneBy(['slug' => $categorySlug]);
+            if(!$category) {
+                throw $this->createNotFoundException('Requested category slug not found');
+            }
+        } else {
+            $category = array();
+        }
 
-       $trick = $this->getDoctrine()
+        $trick = $this->getDoctrine()
            ->getRepository(Trick::class)
            ->findTricks(['categorySlug' => $categorySlug]);
 
-       $category = $this->getDoctrine()
+        $categoryList = $this->getDoctrine()
            ->getRepository(Trick::class)
-           ->findCategories();
+           ->findCategoriesWithTricks();
 
-       return $this->render('tricks/tricks.html.twig', [
+        return $this->render('tricks/tricks.html.twig', [
            'trick_list' => $trick,
-           'category_list' => $category
-       ]);
+           'category_list' => $categoryList,
+           'category' => $category
+        ]);
 
    }
    

@@ -1,6 +1,6 @@
 {% extends '/layout.html.twig' %}
 
-{% block title %}SnowTricks - View Trick : {% endblock %}
+{% block title %}SnowTricks - {% if app.request.get('action') is not null %}{{ app.request.get('action') }} {% endif %}trick : {{ trick.name }}{% endblock %}
 
 {% block content %}
     

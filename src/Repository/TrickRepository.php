@@ -72,7 +72,7 @@ class TrickRepository extends ServiceEntityRepository
      *
      * @return Collection
      */
-     public function findCategories()
+     public function findCategoriesWithTricks()
     {
         return $this->createQueryBuilder('t')
             ->addSelect('c')

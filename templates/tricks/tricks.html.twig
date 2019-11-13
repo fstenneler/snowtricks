@@ -1,6 +1,6 @@
 {% extends '/layout.html.twig' %}
 
-{% block title %}SnowTricks - Browse the list of tricks{% endblock %}
+{% block title %}SnowTricks - Browse the list of tricks{% if category %} : {{ category.name }}{% endif %}{% endblock %}
 
 {% block content %}
     
@@ -26,7 +26,7 @@
                         <select class="select-category">
                             <option value="{{ path("tricks") }}"{% if app.request.get('categorySlug') is same as (null) %} selected{% endif %}>All</option>
                             {% for row in category_list %}
-                                <option value="{{ path('tricks', {categorySlug: row.category.slug}) }}"{% if app.request.get('categorySlug') is same as (row.category.slug) %} selected{% endif %}>{{ row.category.name }}</option>
+                                <option value="{{ path('tricks_by_category', {categorySlug: row.category.slug}) }}"{% if app.request.get('categorySlug') is same as (row.category.slug) %} selected{% endif %}>{{ row.category.name }}</option>
                             {% endfor %}
                         </select>
                     </div>

@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}SnowTricks - Sign up{% endblock %}
+{% block title %}SnowTricks - {% if is_granted('IS_AUTHENTICATED_FULLY') %}Manage your account{% else %}Sign up{% endif %}{% endblock %}
 
 {% block content %}
     

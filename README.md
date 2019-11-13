@@ -24,7 +24,8 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
 ### Download and install Composer
 [Download Composer](https://getcomposer.org/download/)
 
-### Update dependencies from the project directory
+### Update dependencies
+In command line from the project directory :
     composer update
 
 ### Setup the .env files with your own parameters
@@ -36,6 +37,7 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
     MAILER_URL="smtp://yourSmtpServer:yourSmtpPort?encryption=tls&auth_mode=login&username=yourMailUserName@yourWebsiteHostName&password=yourMailPassword"
 
 ### Create database and load data
+In command line from the project directory :
 
 #### Create database
     php bin/console doctrine:database:create
@@ -54,6 +56,7 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
     APP_DEBUG=0
 
 #### Empty chache
+In command line from the project directory :
     php bin/console cache:clear
 
 #### Upload all project files on your server

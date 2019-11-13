@@ -9,36 +9,43 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
 [![SymfonyInsight](https://insight.symfony.com/projects/af37613e-6fa3-4203-9ebd-ae9978c0b14d/big.svg)](https://insight.symfony.com/projects/af37613e-6fa3-4203-9ebd-ae9978c0b14d)
 
 ### Codacy
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/498a5166102d4352bd25f41ed6e12260)](https://www.codacy.com/app/fstenneler/webdev-blog?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fstenneler/webdev-blog&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e2c03f2f71994d3a9689143e48c8b17b)](https://www.codacy.com/manual/fstenneler/snowtricks?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fstenneler/snowtricks&amp;utm_campaign=Badge_Grade)
 
 ## Setup instructions
 
 ### Download the repository
 
 #### Either from the url
-[https://github.com/fstenneler/snowtricks/archive/master.zip]https://github.com/fstenneler/snowtricks/archive/master.zip
+[Download repository using the web URL](https://github.com/fstenneler/snowtricks/archive/master.zip)
 
 #### Or from Git
     git clone https://github.com/fstenneler/snowtricks.git
 
 ### Download and install Composer
-https://getcomposer.org/download/
+[Download Composer](https://getcomposer.org/download/)
 
 ### Update dependencies from the project directory
     composer update
 
-### Create a new MySQL database on your server
-
 ### Setup the .env files with your own parameters
 
 #### Database
-    DATABASE_URL=mysql://user:password@hostName:port/dbName
+    DATABASE_URL=mysql://user:password@hostName:port/snowtricks
 
 #### Email
     MAILER_URL="smtp://yourSmtpServer:yourSmtpPort?encryption=tls&auth_mode=login&username=yourMailUserName@yourWebsiteHostName&password=yourMailPassword"
-    
-### Load initial fixtures
-    php bin/console doctrine:fixtures:load 
+
+### Create database and load data
+
+#### Create database
+    php bin/console doctrine:database:create
+
+#### Create tables and relations
+    php bin/console make:migration
+    php bin/console doctrine:migrations:migrate
+
+#### Load initial data
+    php bin/console doctrine:fixtures:load
 
 ### Deploy the app
 

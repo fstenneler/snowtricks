@@ -34,7 +34,7 @@ class Trick
     private $name;
 
     /**
-     * @ORM\Column(type="text", nullable=true, unique=true)
+     * @ORM\Column(type="text", length=8000, nullable=true)
      */
     private $description;
 

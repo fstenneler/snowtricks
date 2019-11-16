@@ -167,7 +167,7 @@ class UserController extends AbstractController
 
         // store last route into session
         $referer = $request->headers->get('referer');
-        if(strpos($referer, $request->headers->get('host')) && strpos($referer, 'trick')) {
+        if(preg_match("#" . $request->headers->get('host') . "#", $referer) && preg_match("#/tricks#", $referer)) {
             $session->set('referer', $request->headers->get('referer'));
         }
 

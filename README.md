@@ -68,6 +68,7 @@ In command line from the project directory
 
 #### Demo
 A demo user was created :
+
     Username : Jimmy
     Password : azerty
     

@@ -29,7 +29,7 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
 #### In command line from the project directory
     composer update
 
-### Setup the .env files with your own parameters
+### Setup the .env file (at the root of the project) with your own parameters
 
 #### Database
     DATABASE_URL=mysql://user:password@hostName:port/snowtricks
@@ -63,3 +63,15 @@ In command line from the project directory
 
 #### In case or errors, run the debug mode in the .env file
     APP_DEBUG=1
+
+### Starting with the app
+
+#### Demo
+A demo user was created :
+    Username : Jimmy
+    Password : azerty
+    
+You should also find an example of a few trick comments by clicking on the trick named "Melon Grab".
+
+#### Managing tricks
+To be able to start managing tricks, just regiter a new user with your own credentials.

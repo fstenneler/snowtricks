@@ -6,7 +6,7 @@ Online version [here](http://snowtricks.orlinstreet.rocks).
 ## Certifications
 
 ### Symfony Insights
-[![SymfonyInsight](https://insight.symfony.com/projects/af37613e-6fa3-4203-9ebd-ae9978c0b14d/big.svg)](https://insight.symfony.com/projects/af37613e-6fa3-4203-9ebd-ae9978c0b14d)
+[![SymfonyInsight](http://snowtricks.orlinstreet.rocks/images/symfony_insight_badge.svg)](http://snowtricks.orlinstreet.rocks/images/symfony_insights.jpg)
 
 ### Codacy
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e2c03f2f71994d3a9689143e48c8b17b)](https://www.codacy.com/manual/fstenneler/snowtricks?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fstenneler/snowtricks&amp;utm_campaign=Badge_Grade)
